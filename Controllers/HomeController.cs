@@ -10,7 +10,7 @@ namespace stock.Controllers
     {
         public ActionResult Index()
         {
-            return View("Accueil");
+            return View("Login");
         }
 
         public ActionResult About()

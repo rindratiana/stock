@@ -1,0 +1,73 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+<div class="row">
+    <!-- left column -->
+    <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Validation de la sortie</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form role="form">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Date</label>
+                                <input type="date" class="form-control" id="date" value="@ViewBag.date" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Numéro facture</label>
+                                <input type="text" class="form-control" id="numero" value="BL00256" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Désignation</label>
+                                <input type="text" class="form-control" id="designation" value="Doliprane 500mg" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Quantités</label>
+                                <input type="text" class="form-control" id="quantite" value="5" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Caissier</label>
+                                <input type="text" class="form-control" id="caissier" value="Mendrika" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Magasinier</label>
+                                <input type="text" class="form-control" id="magasinier" placeholder="Magasinier">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Binôme</label>
+                                <input type="text" class="form-control" id="binome" placeholder="Binôme">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Sortie</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.card -->
+        </div>
+    </div>
+</div>

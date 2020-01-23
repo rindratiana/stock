@@ -79,7 +79,16 @@ E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Web.Razor.resources.dll
 E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Web.WebPages.resources.dll
 E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Web.WebPages.Deployment.resources.dll
 E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Web.WebPages.Razor.resources.dll
-E:\Projet dev\stock\projet\stock\stock\obj\Debug\stock.csprojAssemblyReference.cache
 E:\Projet dev\stock\projet\stock\stock\obj\Debug\stock.csproj.CopyComplete
 E:\Projet dev\stock\projet\stock\stock\obj\Debug\stock.dll
 E:\Projet dev\stock\projet\stock\stock\obj\Debug\stock.pdb
+E:\Projet dev\stock\projet\stock\stock\bin\System.Net.Http.Formatting.dll
+E:\Projet dev\stock\projet\stock\stock\bin\System.Web.Http.dll
+E:\Projet dev\stock\projet\stock\stock\bin\System.Web.Http.WebHost.dll
+E:\Projet dev\stock\projet\stock\stock\bin\System.Net.Http.Formatting.xml
+E:\Projet dev\stock\projet\stock\stock\bin\System.Web.Http.xml
+E:\Projet dev\stock\projet\stock\stock\bin\System.Web.Http.WebHost.xml
+E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Net.Http.Formatting.resources.dll
+E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Web.Http.resources.dll
+E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Web.Http.WebHost.resources.dll
+E:\Projet dev\stock\projet\stock\stock\obj\Debug\stock.csprojAssemblyReference.cache
