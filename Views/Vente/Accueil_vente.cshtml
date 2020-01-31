@@ -2,13 +2,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/flick/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="~/Content/Style/Style.css">
 <script type="text/javascript">
     $(function () {
+        //Autocomplete
         $("#numero").autocomplete({
             maxShowItems: 5,
             source: function (request, response) {
@@ -33,9 +29,15 @@
             },
             minLength: 1
         });
+
+        //Voir liste article
+        $("#btSubmit" ).click(function() {
+        var essai = $("#numero").val();
+        console.log(essai);
+        alert(essai);
+    });
     });
 </script>
-
 <div class="container-fluid">
     <div class="row">
         <!-- left column -->
@@ -46,54 +48,55 @@
                     <h3 class="card-title">Commande vers stock</h3>
                 </div>
                 <!-- /.card-header -->
-                    <div class="card-body">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="date">Date</label>
+                                <input type="date" class="form-control" id="date2" value="@ViewBag.date" name="date">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="num_facture">Numéro facture/BL</label>
+                                <input type="text" class="form-control" id="numero" placeholder="N* facture/BL" name="numerocomplete">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="caissier">Caissier</label>
+                                <input type="text" class="form-control" id="caissier" placeholder="Mendrika" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="comptoir">Comptoir</label>
+                                <input type="text" class="form-control" id="comptoir" placeholder="Comptoir" name="comptoir" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="date">Date</label>
-                                    <input type="date" class="form-control" id="date2" value="@ViewBag.date" name="date">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="num_facture">Numéro facture/BL</label>
-                                    <input type="text" class="form-control" id="numero" placeholder="N* facture/BL" name="numerocomplete">
+                            <div class="col-sm-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="client">
+                                    <label class="form-check-label">Particulier</label>
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label for="caissier">Caissier</label>
-                                    <input type="text" class="form-control" id="caissier" placeholder="Mendrika" disabled>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label for="comptoir">Comptoir</label>
-                                    <input type="text" class="form-control" id="comptoir" placeholder="Comptoir" name="comptoir" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="client">
-                                        <label class="form-check-label">Particulier</label>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="client">
-                                        <label class="form-check-label">Entreprise</label>
-                                    </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="client">
+                                    <label class="form-check-label">Entreprise</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary" style="margin-top:10px">Voir les articles</button>
-                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <!--<button id="btSubmit" type="button" onclick="getArticle()" class="btn btn-primary" style="margin-top:10px" data-toggle="modal" data-target="#myModal">Voir les articles</button>-->
+                    <button id="btSubmit" type="button" class="btn btn-primary" style="margin-top:10px">Voir les articles</button>
+                </div>
                 @if (ViewData["articles"] != null)
                 {
                     foreach (stock.Models.Classe.Stock.Article article in ViewData["articles"] as List<stock.Models.Classe.Stock.Article>)
@@ -114,3 +117,28 @@
         </div>
     </div>
 </div>
+    <!-- The Modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Liste des articles pour le ticket N* </h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Modal body..
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
