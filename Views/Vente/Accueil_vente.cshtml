@@ -1,54 +1,75 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/flick/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="~/Content/Style/Style.css">
+<script type="text/javascript">
+    $(function () {
+        $("#numero").autocomplete({
+            maxShowItems: 5,
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Vente/AutoComplete/',
+                    data: "{ 'numerocomplete': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            minLength: 1
+        });
+    });
+</script>
+
 <div class="container-fluid">
     <div class="row">
         <!-- left column -->
-        <div class="col-md-12">
+        <div class="col-md-8">
             <!-- general form elements -->
             <div class="card card-primary">
                 <div class="card-header">
                     <h3 class="card-title">Commande vers stock</h3>
                 </div>
                 <!-- /.card-header -->
-                <!-- form start -->
-                <form role="form">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-2">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="date">Date</label>
-                                    <input type="date" class="form-control" id="date2" value="@ViewBag.date">
+                                    <input type="date" class="form-control" id="date2" value="@ViewBag.date" name="date">
                                 </div>
                             </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label for="designation">Désignation</label>
-                                    <input type="text" class="form-control" id="Désignation" placeholder="Désignation">
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label for="quantites">Quantités</label>
-                                    <input type="number" class="form-control" id="quantite" placeholder="Quantités">
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="num_facture">Numéro facture/BL</label>
-                                    <input type="text" class="form-control" id="numero" placeholder="N* facture/BL">
+                                    <input type="text" class="form-control" id="numero" placeholder="N* facture/BL" name="numerocomplete">
                                 </div>
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label for="caissier">Caissier</label>
-                                    <input type="text" class="form-control" id="caissier" placeholder="Mendrika">
+                                    <input type="text" class="form-control" id="caissier" placeholder="Mendrika" disabled>
                                 </div>
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label for="comptoir">Comptoir</label>
-                                    <input type="text" class="form-control" id="comptoir" placeholder="Comptoir">
+                                    <input type="text" class="form-control" id="comptoir" placeholder="Comptoir" name="comptoir" disabled>
                                 </div>
                             </div>
                         </div>
@@ -70,16 +91,26 @@
                         </div>
                     </div>
                     <!-- /.card-body -->
-
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary" style="margin-top:10px">Commander</button>
+                        <button type="submit" class="btn btn-primary" style="margin-top:10px">Voir les articles</button>
                     </div>
-                </form>
+                @if (ViewData["articles"] != null)
+                {
+                    foreach (stock.Models.Classe.Stock.Article article in ViewData["articles"] as List<stock.Models.Classe.Stock.Article>)
+                    {
+                        <p>@article.References --- @article.Designation --- @article.Emplacement</p><br />
+                    }
+                }
+                else
+                {
+                    <p>Tsy misy</p>
+                }
+                @if (ViewBag.erreur != null)
+                {
+                    <p>@ViewBag.erreur</p>
+                }
             </div>
             <!-- /.card -->
         </div>
     </div>
 </div>
-<script>
-   
-</script>
