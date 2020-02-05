@@ -1,4 +1,15 @@
-﻿.ui-autocomplete {
+﻿.succes_message {
+    text-align: center;
+    color: green;
+}
+.erreur_message{
+    text-align:center;
+    color:red;
+}
+.choix{
+    margin-top:10px;
+}
+.ui-autocomplete {
     height: 200px;
     overflow-y: scroll;
     overflow-x: hidden;

@@ -1,4 +1,5 @@
-﻿using stock.Models.Classe.Stock;
+﻿using stock.Models.Classe;
+using stock.Models.Classe.Stock;
 using stock.Models.DAO;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,20 @@ namespace stock.Controllers.Vente
             return View("Accueil_vente");
         }
         [HttpPost]
+        public JsonResult GetListeCommande(string numerocomplete)
+        {
+            try
+            {
+                AccesSageDAO acces = new AccesSageDAO();
+                List<DetailCommande> liste = acces.GetArticlesCommandes(numerocomplete);
+                return Json(liste);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
         public JsonResult AutoComplete(string numerocomplete)
         {
             try
@@ -35,14 +50,33 @@ namespace stock.Controllers.Vente
         {
             try
             {
-                string date = Request.Form["date"];
-                string numero = Request.Form["numero"];
-                string comptoir = Request.Form["comptoir"];
+                int taille = Int32.Parse(Request.Form["taille"]);
+                string numero_ticket = Request.Form["numero_ticket"];
                 string client = Request.Form["client"];
-                AccesSageDAO acces = new AccesSageDAO();
-                List<Article> liste = acces.GetArticlesCommandes(numero);
-                ViewData["articles"] = liste;
-                ViewBag.date = DateTime.Now.ToString("yyyy-MM-dd");
+                List<DetailCommande> listeCommande = new List<DetailCommande>();
+                
+                for(int i = 0; i < taille; i++)
+                {
+                    if(Request.Form["article_checked" + i + ""] == "on") { 
+                        DetailCommande commandeTemp = new DetailCommande();
+                        Article articleTemp = new Article();
+                        articleTemp.References = Request.Form["ref_article"+ i +""];
+                        commandeTemp.Article = articleTemp;
+                        commandeTemp.Quantite = Int32.Parse(Request.Form["quantite"+i+""]);
+                        commandeTemp.Emplacement = Int32.Parse(Request.Form["emplacement" + i + ""]);
+                        listeCommande.Add(commandeTemp);
+                    }
+                }
+
+                Commande commande = new Commande();
+                commande.Client = commande.ParseInt(client,"Veuillez choisir un client");
+                commande.CreateCommande(listeCommande,numero_ticket);
+
+                AccesSageDAO accesSageDAO = new AccesSageDAO();
+                Comptoir comptoir = accesSageDAO.GetComptoirByNumTicket(numero_ticket);
+                List<Commande> listeCommandeEnCours = commande.GetListeCommandeEnCours(comptoir);
+                ViewData["listeCommandeEnCours"] = listeCommandeEnCours;
+                ViewBag.message = "Commande envoyé";
                 return View("Accueil_vente");
             }
             catch(Exception exception)

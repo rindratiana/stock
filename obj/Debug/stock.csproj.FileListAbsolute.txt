@@ -92,3 +92,11 @@ E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Net.Http.Formatting.resourc
 E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Web.Http.resources.dll
 E:\Projet dev\stock\projet\stock\stock\bin\fr\System.Web.Http.WebHost.resources.dll
 E:\Projet dev\stock\projet\stock\stock\obj\Debug\stock.csprojAssemblyReference.cache
+E:\Projet dev\stock\projet\stock\stock\bin\EntityFramework.dll
+E:\Projet dev\stock\projet\stock\stock\bin\EntityFramework.SqlServer.dll
+E:\Projet dev\stock\projet\stock\stock\bin\MySql.Data.dll
+E:\Projet dev\stock\projet\stock\stock\bin\MySql.Data.Entity.EF6.dll
+E:\Projet dev\stock\projet\stock\stock\bin\EntityFramework.xml
+E:\Projet dev\stock\projet\stock\stock\bin\EntityFramework.SqlServer.xml
+E:\Projet dev\stock\projet\stock\stock\bin\MySql.Data.xml
+E:\Projet dev\stock\projet\stock\stock\bin\MySql.Data.Entity.EF6.xml

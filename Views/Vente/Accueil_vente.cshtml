@@ -3,7 +3,11 @@
 }
 
 <script type="text/javascript">
-    $(function () {
+        //nettoie le modal à chaque close 
+        $(function () {
+            $('#myModal').on('hidden.bs.modal', function () {
+                $('#corps').text("");
+            });
         //Autocomplete
         $("#numero").autocomplete({
             maxShowItems: 5,
@@ -32,16 +36,55 @@
 
         //Voir liste article
         $("#btSubmit" ).click(function() {
-        var essai = $("#numero").val();
-        console.log(essai);
-        alert(essai);
-    });
+            var num_ticket = $("#numero").val();
+            if (num_ticket == "") {
+                alert("Vérifiez bien le numéro du ticket");
+            }
+            else {
+                $(document).ready(function () {
+                $.ajax({
+                    url: '/Vente/GetListeCommande/',
+                    data: "{ 'numerocomplete': '" + num_ticket + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8"
+                })
+                .done(function(response){
+                    let data = response;
+                    console.log(data);
+                    //Element à cacher
+                    $("#corps").append("<input type=\"hidden\" name=\"taille\" value=\"" + data.length + "\">");
+                    $("#corps").append("<input type=\"hidden\" name=\"numero_ticket\" value=\"" + num_ticket + "\">");
+                    for (var i = 0; i < data.length; i++) {
+                        var j = i + 1;
+                        //Element à cacher
+                        $("#corps").append("<input type=\"hidden\" name=\"ref_article" + i + "\" value=\"" + data[i].Article.References + "\">");
+                        $("#corps").append("<input type=\"hidden\" name=\"emplacement" + i + "\" value=\"" + data[i].Article.Emplacement + "\">");
+
+                        $("#corps").append("<tr>");
+                        $("#corps").append("<td>" + j + "</td>");
+                        $("#corps").append("<td>" + data[i].Article.Designation + "</td>");
+                        $("#corps").append("<td style=\"text-align:right\"><input style=\"width:55px\" name = \"quantite"+i+"\" type=\"number\" value=" + data[i].Quantite +"></td>");
+                        $("#corps").append("<td style=\"text-align:center\"><input name=\"article_checked"+i+"\" type=\"checkbox\"></td>");
+                        $("#corps").append("</tr>");
+                    }
+                    $("#numero2").text(num_ticket);
+                    $("#myModal").modal("show");
+                })
+                .fail(function(error){
+                    alert("Vérifiez bien le numéro du ticket");
+                })
+            });
+            }
+        });
+
+        //Ajax liste details commande
     });
 </script>
 <div class="container-fluid">
     <div class="row">
         <!-- left column -->
-        <div class="col-md-8">
+        <div class="col-md-6">
             <!-- general form elements -->
             <div class="card card-primary">
                 <div class="card-header">
@@ -49,96 +92,158 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="date">Date</label>
-                                <input type="date" class="form-control" id="date2" value="@ViewBag.date" name="date">
-                            </div>
+                    @if (ViewBag.erreur != null)
+                    {
+                        <div class="erreur_message">
+                            <p><i class="fas fa-exclamation-triangle"></i> @ViewBag.erreur</p>
                         </div>
-                        <div class="col-sm-4">
+                    }
+                    @if (ViewBag.message != null)
+                    {
+                        <div class="succes_message">
+                            <p><i class="fas fa-check"></i> @ViewBag.message</p>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="num_facture">Numéro facture/BL</label>
                                 <input type="text" class="form-control" id="numero" placeholder="N* facture/BL" name="numerocomplete">
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label for="caissier">Caissier</label>
                                 <input type="text" class="form-control" id="caissier" placeholder="Mendrika" disabled>
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label for="comptoir">Comptoir</label>
                                 <input type="text" class="form-control" id="comptoir" placeholder="Comptoir" name="comptoir" disabled>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="client">
-                                    <label class="form-check-label">Particulier</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="client">
-                                    <label class="form-check-label">Entreprise</label>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button id="btSubmit" type="button" class="btn btn-primary">Voir les articles</button>
+                </div>
+            </div>
+            <!-- /.card -->
+        </div>
+        <div class="col-md-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Liste des commandes en cours</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10px">#</th>
+                                    <th>Numéro ticket</th>
+                                    <th>Voir détails</th>
+                                    <th>Réception</th>
+                                    <th>Annuler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @if (ViewData["listeCommandeEnCours"] != null) { 
+                                foreach (stock.Models.Classe.Stock.Commande commande in ViewData["listeCommandeEnCours"] as List<stock.Models.Classe.Stock.Commande>)
+                                {
+                                <tr>
+                                    <td>#</td>
+                                    <td style="text-align:right">@commande.Numero</td>
+                                    <td style="text-align:center"><button type="button"><i class="fas fa-info-circle"></i></button></td>
+                                    <td style="text-align:center"><button type="button"><i class="fas fa-check"></i></button></td>
+                                    <td style="text-align:center"><button type="button"><i class="fas fa-times"></i></button></td>
+                                </tr>
+                                }
+                            }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <!--<button id="btSubmit" type="button" onclick="getArticle()" class="btn btn-primary" style="margin-top:10px" data-toggle="modal" data-target="#myModal">Voir les articles</button>-->
-                    <button id="btSubmit" type="button" class="btn btn-primary" style="margin-top:10px">Voir les articles</button>
                 </div>
-                @if (ViewData["articles"] != null)
-                {
-                    foreach (stock.Models.Classe.Stock.Article article in ViewData["articles"] as List<stock.Models.Classe.Stock.Article>)
-                    {
-                        <p>@article.References --- @article.Designation --- @article.Emplacement</p><br />
-                    }
-                }
-                else
-                {
-                    <p>Tsy misy</p>
-                }
-                @if (ViewBag.erreur != null)
-                {
-                    <p>@ViewBag.erreur</p>
-                }
             </div>
             <!-- /.card -->
         </div>
     </div>
 </div>
-    <!-- The Modal -->
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Liste des articles pour le ticket N* </h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Liste des articles pour le ticket N* <div id="numero2"></div></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form action="/Vente/Commande/" method="post">
                 <!-- Modal body -->
                 <div class="modal-body">
-                    Modal body..
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Articles</h3>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10px">#</th>
+                                                <th>Désignation</th>
+                                                <th>Quantité(s)</th>
+                                                <th style="width: 40px">Choisir</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="corps">
+                                            
+                                        </tbody>
+                                    </table>
+                                    <div class="choix">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="client" value="1">
+                                                        <label class="form-check-label">Particulier</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="client" value="0">
+                                                        <label class="form-check-label">Entreprise</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Commande</button>
                 </div>
-
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
