@@ -15,6 +15,7 @@ namespace stock.Models.Classe.Stock
         private Comptoir comptoir;
         private int client;
         private string etat;
+        private List<DetailCommande> listeDetailCommande;
 
         public Commande() { }
         public Commande(int idCommande, string dateCommande, string numero, Comptoir comptoir, int client, string etat)
@@ -33,7 +34,99 @@ namespace stock.Models.Classe.Stock
         public Comptoir Comptoir { get => comptoir; set => comptoir = value; }
         public int Client { get => client; set => client = value; }
         public string Etat { get => etat; set => etat = value; }
+        public List<DetailCommande> ListeDetailCommande { get => listeDetailCommande; set => listeDetailCommande = value; }
 
+        public List<DetailCommande> GetArticlesCommandesStock(string numerocomplete)
+        {
+            AccesSageDAO accesSageDAO = new AccesSageDAO();
+            CommandeDAO commandeDAO = new CommandeDAO();
+            List<DetailCommande> listeArticleSage = accesSageDAO.GetArticlesCommandes(numerocomplete);
+            List<DetailCommande> listeArticleStock = commandeDAO.GetArticlesCommandes(numerocomplete);
+            try
+            {
+                List<DetailCommande> reponse= new List<DetailCommande>();
+                for(int i = 0; i < listeArticleSage.Count; i++)
+                {
+                    DetailCommande temp = listeArticleStock.Find(x => x.Article.References.Contains(listeArticleSage[i].Article.References));
+                    if (temp != null)
+                    {
+                        reponse.Add(listeArticleSage[i]);
+                    }
+                }
+                return reponse;
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public Boolean TestExistence(string num_ticket)
+        {
+            try
+            {
+                CommandeDAO commandeDAO = new CommandeDAO();
+                return commandeDAO.testExistence(num_ticket);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void Annuler(string id_commande)
+        {
+            try
+            {
+                CommandeDAO commandeDAO = new CommandeDAO();
+                commandeDAO.Annuler(id_commande);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void Sortie(string numero_ticket,string id_magasinier,string id_binome)
+        {
+            try
+            {
+                CommandeDAO commandeDAO = new CommandeDAO();
+                commandeDAO.Sortie(numero_ticket, id_magasinier, id_binome);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void Valider(string id_commande)
+        {
+            try
+            {
+                CommandeDAO commandeDAO = new CommandeDAO();
+                commandeDAO.Valider(id_commande);
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public List<Commande> GetListeToutCommandeEnCours()
+        {
+            CommandeDAO commandeDAO = new CommandeDAO();
+            List<Commande> reponse = new List<Commande>();
+            try
+            {
+                reponse = commandeDAO.GetListeToutCommandeEnCours("100");
+                for(int i = 0; i < reponse.Count; i++)
+                {
+                    List<DetailCommande> detailCommande = GetArticlesCommandesStock(reponse[i].Numero);
+                    reponse[i].ListeDetailCommande = detailCommande;
+                }
+                return reponse;
+            }
+            catch (Exception execption)
+            {
+                throw execption;
+            }
+        }
         public List<Commande> GetListeCommandeEnCours(Comptoir comptoir)
         {
             CommandeDAO commandeDAO = new CommandeDAO();
@@ -105,7 +198,7 @@ namespace stock.Models.Classe.Stock
             CommandeDAO commandeDao = new CommandeDAO();
             try
             {
-                return commandeDao.testExistance(numero_ticket);
+                return commandeDao.testExistence(numero_ticket);
             }
             catch(Exception exception)
             {

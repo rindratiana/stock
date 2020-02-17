@@ -11,7 +11,202 @@ namespace stock.Models.DAO
     public class CommandeDAO
     {
         public CommandeDAO() { }
-        public Boolean testExistance(string numero_ticket)
+        public List<DetailCommande> GetArticlesCommandes(string numerocomplete){
+            Connexion connexion = new Connexion();
+            string query = "select commande.numero, detail_commande.reference_article from detail_commande join commande on commande.id_commande = detail_commande.id_commande where commande.numero='"+numerocomplete+"'";
+            MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
+            MySqlDataReader dataReader;
+            //Creation d'une liste
+            List<DetailCommande> reponse = new List<DetailCommande>();
+            try
+            {
+                //Ouverture connexion
+                if (connexion.OpenConnection() == true)
+                {
+                    //Excecution de la commande
+                    dataReader = command.ExecuteReader();
+
+                    //Lecture des donnees et stockage dans la liste
+                    while (dataReader.Read())
+                    {
+                        DetailCommande detailCommande = new DetailCommande();
+                        detailCommande.Numero = dataReader["numero"].ToString();
+                        Article article = new Article();
+                        article.References = dataReader["reference_article"].ToString();
+                        detailCommande.Article = article;
+                        reponse.Add(detailCommande);
+                    }
+                    dataReader.Close();
+                }
+                //return
+                return reponse;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                if (command != null)
+                {
+                    command.Dispose();
+                }
+                if (connexion.GetConnection() != null)
+                {
+                    connexion.GetConnection().Close();
+                }
+            }
+        }
+        public void AnnulerCommande(MySqlCommand command, string id_commande)
+        {
+            try
+            {
+                string query = "UPDATE COMMANDE SET ETAT = '000' where ID_COMMANDE = '" + id_commande + "'";
+                //create command and assign the query and connection from the constructor
+                command.CommandText = query;
+                //Execute command
+                command.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void Annuler(string id_commande)
+        {
+            Connexion connexion = new Connexion();
+            MySqlConnection connection = connexion.GetConnection();
+            connection.Open();
+            MySqlCommand command = connection.CreateCommand();
+            MySqlTransaction transaction;
+            transaction = connection.BeginTransaction();
+            command.Connection = connection;
+            command.Transaction = transaction;
+            try
+            {
+                this.AnnulerCommande(command, id_commande);
+                if (transaction != null)
+                {
+                    transaction.Commit();
+                }
+
+            }
+            catch (Exception exception)
+            {
+                transaction.Rollback();
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseAll(command, transaction, connection);
+            }
+        }
+        public void ValiderCommande(MySqlCommand command,string id_commande)
+        {
+            try
+            {
+                string query = "UPDATE COMMANDE SET ETAT = '111' where ID_COMMANDE = '"+id_commande+"'";
+                //create command and assign the query and connection from the constructor
+                command.CommandText = query;
+                //Execute command
+                command.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void SortieStock(MySqlCommand command,string id_magasinier,string id_binome,string numero_ticket)
+        {
+            string idcommande = this.GetIdCommande(numero_ticket);
+            try
+            {
+                string query = "INSERT INTO SORTIE (ID_COMMANDE,ID_BINOME,ID_MAGASINIER) values('"+idcommande+"','"+id_binome+"','"+id_magasinier+"')";
+                //create command and assign the query and connection from the constructor
+                command.CommandText = query;
+                //Execute command
+                command.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void Sortie(string numero_ticket,string id_magasinier,string id_binome)
+        {
+            Connexion connexion = new Connexion();
+            MySqlConnection connection = connexion.GetConnection();
+            connection.Open();
+            MySqlCommand command = connection.CreateCommand();
+            MySqlTransaction transaction;
+            transaction = connection.BeginTransaction();
+            command.Connection = connection;
+            command.Transaction = transaction;
+            try
+            {
+                this.SortieCommande(command, numero_ticket);
+                this.SortieStock(command, id_magasinier, id_binome,numero_ticket);
+                if (transaction != null)
+                {
+                    transaction.Commit();
+                }
+
+            }
+            catch (Exception exception)
+            {
+                transaction.Rollback();
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseAll(command, transaction, connection);
+            }
+        }
+        public void SortieCommande(MySqlCommand command, string numero_ticket)
+        {
+            try
+            {
+                string query = "UPDATE COMMANDE SET ETAT = '110' where numero = '" + numero_ticket + "'";
+                //create command and assign the query and connection from the constructor
+                command.CommandText = query;
+                //Execute command
+                command.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void Valider(string id_commande)
+        {
+            Connexion connexion = new Connexion();
+            MySqlConnection connection = connexion.GetConnection();
+            connection.Open();
+            MySqlCommand command = connection.CreateCommand();
+            MySqlTransaction transaction;
+            transaction = connection.BeginTransaction();
+            command.Connection = connection;
+            command.Transaction = transaction;
+            try
+            {
+                this.ValiderCommande(command, id_commande);
+                if (transaction != null)
+                {
+                    transaction.Commit();
+                }
+
+            }
+            catch (Exception exception)
+            {
+                transaction.Rollback();
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseAll(command, transaction, connection);
+            }
+        }
+        public Boolean testExistence(string numero_ticket)
         {
             Connexion connexion = new Connexion();
             string query = "SELECT id_commande FROM commande where numero='" + numero_ticket + "'";
@@ -42,7 +237,7 @@ namespace stock.Models.DAO
                 }
                 else
                 {
-                    throw new Exception("Ce ticket a été déjà utiliser");
+                    throw new Exception("Ce ticket a été déjà utilisé");
                 }
             }
             catch (Exception exception)
@@ -59,6 +254,88 @@ namespace stock.Models.DAO
                 {
                     connexion.GetConnection().Close();
                 }
+            }
+        }
+
+        public string getDernierNumeroTicket()
+        {
+            Connexion connexion = new Connexion();
+            string query = "SELECT NUMERO FROM COMMANDE WHERE ID_COMMANDE = (SELECT MAX(ID_COMMANDE) FROM COMMANDE)";
+            MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
+            //Creation d'une liste
+            string reponse = "";
+            try
+            {
+                MySqlConnection connection = connexion.GetConnection();
+                //Ouverture connexion
+                if (connexion.OpenConnection() == true)
+                {
+                    //Excecution de la commande
+                    MySqlDataReader dataReader = command.ExecuteReader();
+
+                    //Lecture des donnees et stockage dans la liste
+                    while (dataReader.Read())
+                    {
+                        reponse = dataReader["NUMERO"].ToString();
+                    }
+                    //fermeture du Data Reader
+                    dataReader.Close();
+                }
+                //return
+                return reponse;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                if (command != null)
+                {
+                    command.Dispose();
+                }
+                if (connexion.GetConnection() != null)
+                {
+                    connexion.GetConnection().Close();
+                }
+            }
+        }
+        public List<Commande> GetListeToutCommandeEnCours(string etat)
+        {
+            Connexion connexion = new Connexion();
+            string query = "SELECT * FROM commande where ETAT='" + etat + "'";
+            MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
+            AccesSageDAO accesSageDAO = new AccesSageDAO();
+            MySqlDataReader dataReader;
+            //Creation d'une liste
+            List<Commande> reponse = new List<Commande>();
+            try
+            {
+                //Ouverture connexion
+                if (connexion.OpenConnection() == true)
+                {
+                    //Excecution de la commande
+                    dataReader = command.ExecuteReader();
+
+                    //Lecture des donnees et stockage dans la liste
+                    while (dataReader.Read())
+                    {
+                        Comptoir comptoir = accesSageDAO.GetComptoirByNumTicket(dataReader["NUMERO"].ToString());
+                        Commande commande = new Commande(Int32.Parse(dataReader["id_commande"].ToString()), dataReader["DATE_COMMANDE"].ToString(), dataReader["NUMERO"].ToString(), comptoir, Int32.Parse(dataReader["CLIENT"].ToString()), dataReader["ETAT"].ToString());
+                        reponse.Add(commande);
+                    }
+                    dataReader.Close();
+                }
+                //return
+                return reponse;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseAll(command, null, connexion.GetConnection());
             }
         }
         public List<Commande> GetListeCommandeEnCours(Comptoir comptoir,string etat)
@@ -231,23 +508,11 @@ namespace stock.Models.DAO
             }
             finally
             {
-                if (command != null)
-                {
-                    command.Dispose();
-                }
-                if (transaction != null)
-                {
-                    transaction.Dispose();
-                }
-                if (connection != null)
-                {
-                    connection.Close();
-                }
+                connexion.CloseAll(command, transaction, connection);
             }
         }
         public void AjoutCommande(MySqlCommand cmd, Commande commande)
         {
-            Connexion connexion = new Connexion();
             try
             {
                 string query = "INSERT INTO commande (DATE_COMMANDE,NUMERO,ID_COMPTOIR,CLIENT,ETAT) " +

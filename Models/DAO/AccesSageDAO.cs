@@ -13,23 +13,27 @@ namespace stock.Models.DAO
 
         public Comptoir GetComptoirByNumTicket(string numero_ticket)
         {
-            Comptoir reponse = new Comptoir();
             ConnexionSage connexion = new ConnexionSage();
             SqlCommand command;
             SqlDataReader dataReader;
+            Comptoir comptoirTemp = new Comptoir();
             connexion.Open();
             string sql = "SELECT DISTINCT F_DOCLIGNE.CA_No, F_CAISSE.CA_Intitule FROM F_DOCLIGNE join F_CAISSE on F_CAISSE.CA_No = F_DOCLIGNE.CA_No WHERE F_DOCLIGNE.DO_Piece='" + numero_ticket + "'";
-            throw new Exception(sql);
             command = new SqlCommand(sql, connexion.Connection);
             dataReader = command.ExecuteReader();
             try
             {
-                while (dataReader.Read())
+                if (dataReader.Read().ToString()=="True") {
+                    comptoirTemp.IdComptoir = dataReader["CA_No"].ToString();
+                    comptoirTemp.NomComptoir = dataReader["CA_Intitule"].ToString();
+                }
+                else
                 {
-                    reponse = new Comptoir(dataReader["CA_No"].ToString(), dataReader["CA_Intitule"].ToString());
+                    comptoirTemp.IdComptoir = "0";
+                    comptoirTemp.NomComptoir = "Autres";
                 }
 
-                return reponse;
+                return comptoirTemp;
             }
             catch (Exception exception)
             {
@@ -108,9 +112,9 @@ namespace stock.Models.DAO
             SqlDataReader dataReader;
             connexion.Open();
             string sql = "SELECT F_ARTICLE.AR_Ref,F_ARTICLE.AR_Design,F_ARTICLE.FA_CodeFamille," +
-                "F_ARTICLE.CL_No1, F_DOCLIGNE.DL_Qte,F_DOCLIGNE.DO_Piece FROM F_DOCLIGNE " +
+                "F_ARTICLE.CL_No2, F_DOCLIGNE.DL_Qte,F_DOCLIGNE.DO_Piece FROM F_DOCLIGNE " +
                 "join F_ARTICLE on F_ARTICLE.AR_Ref=F_DOCLIGNE.AR_Ref  " +
-                "join F_CATALOGUE on F_ARTICLE.CL_No1=F_CATALOGUE.CL_No " +
+                "join F_CATALOGUE on F_ARTICLE.CL_No2=F_CATALOGUE.CL_No " +
                 "WHERE F_DOCLIGNE.DO_Piece='"+ numero +"' and F_DOCLIGNE.DO_Type='30'";
             command = new SqlCommand(sql, connexion.Connection);
             dataReader = command.ExecuteReader();

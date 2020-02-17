@@ -60,5 +60,22 @@ namespace stock.Models.DAO
                 return false;
             }
         }
+
+        public void CloseAll(MySqlCommand command,MySqlTransaction transaction, MySqlConnection connection)
+        {
+            if (command != null)
+            {
+                command.Dispose();
+            }
+            if (transaction != null)
+            {
+                transaction.Dispose();
+            }
+            if (connection != null)
+            {
+                connection.Close();
+            }
+        }
+
     }
 }

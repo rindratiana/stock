@@ -1,4 +1,16 @@
-﻿.succes_message {
+﻿.modal-body2{
+    height: 250px;
+    overflow-y: auto;
+}
+
+@media (min-height: 500px) {
+    .modal-body2 { height: 400px; }
+}
+
+@media (min-height: 800px) {
+    .modal-body2 { height: 600px; }
+}
+.succes_message {
     text-align: center;
     color: green;
 }

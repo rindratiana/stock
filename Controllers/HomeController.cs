@@ -8,6 +8,10 @@ namespace stock.Controllers
 {
     public class HomeController : Controller
     {
+        public ActionResult Chat()
+        {
+            return View("Chat");
+        }
         public ActionResult Index()
         {
             return View("Login");

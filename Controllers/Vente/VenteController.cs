@@ -19,6 +19,49 @@ namespace stock.Controllers.Vente
             return View("Accueil_vente");
         }
         [HttpPost]
+        public JsonResult Annulation(string id_commande)
+        {
+            try
+            {
+                Commande commande = new Commande();
+                commande.Annuler(id_commande);
+                string message = "Annulation de la commande avec succès";
+                return Json(message);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
+        public JsonResult Reception(string id_commande)
+        {
+            try
+            {
+                Commande commande = new Commande();
+                commande.Valider(id_commande);
+                return Json("Clôture du ticket fait avec succès");
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
+        public JsonResult GetListeCommandeStock(string numerocomplete)
+        {
+            try
+            {
+                Commande commande = new Commande();
+                List<DetailCommande> liste = commande.GetArticlesCommandesStock(numerocomplete);
+                return Json(liste);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
         public JsonResult GetListeCommande(string numerocomplete)
         {
             try
@@ -40,6 +83,19 @@ namespace stock.Controllers.Vente
                 AccesSageDAO acces = new AccesSageDAO();
                 List<string> liste = acces.GetNumeroPiece(numerocomplete);
                 return Json(liste);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }        
+        public JsonResult TestExistence(string num_ticket)
+        {
+            try
+            {
+                Commande commande = new Commande();
+                Boolean reponse = commande.TestExistence(num_ticket);
+                return Json(reponse);
             }
             catch (Exception exception)
             {

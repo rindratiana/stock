@@ -100,3 +100,16 @@ E:\Projet dev\stock\projet\stock\stock\bin\EntityFramework.xml
 E:\Projet dev\stock\projet\stock\stock\bin\EntityFramework.SqlServer.xml
 E:\Projet dev\stock\projet\stock\stock\bin\MySql.Data.xml
 E:\Projet dev\stock\projet\stock\stock\bin\MySql.Data.Entity.EF6.xml
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.AspNet.SignalR.Core.dll
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.Owin.dll
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.Owin.Host.SystemWeb.dll
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.Owin.Security.dll
+E:\Projet dev\stock\projet\stock\stock\bin\Owin.dll
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.AspNet.SignalR.Core.pdb
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.AspNet.SignalR.Core.xml
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.Owin.xml
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.Owin.Host.SystemWeb.xml
+E:\Projet dev\stock\projet\stock\stock\bin\Microsoft.Owin.Security.xml
