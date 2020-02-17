@@ -12,7 +12,49 @@ namespace stock.Controllers.Stock
 {
     public class StockController : Controller
     {
-
+        //GetStatistiquesByEmplacement
+        [HttpPost]
+        public JsonResult GetStatistiquesByEmplacement(string dateDebut, string dateFin,string numeroEmplacements)
+        {
+            try
+            {
+                StatArticles stat = new StatArticles();
+                List<StatArticles> liste = stat.GetStatArticles(dateDebut, dateFin,numeroEmplacements);
+                return Json(liste);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
+        public JsonResult GetStatistiquesEntreDeuxDates(string dateDebut,string dateFin)
+        {
+            try
+            {
+                StatEmplacement stat = new StatEmplacement();
+                List<StatEmplacement> liste = stat.GetStatEmplacementsEntreDeuxDates(dateDebut,dateFin);
+                return Json(liste);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
+        public JsonResult GetStatistiques()
+        {
+            try
+            {
+                StatEmplacement stat = new StatEmplacement();
+                List<StatEmplacement> liste = stat.GetStatEmplacements();
+                return Json(liste);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
         [HttpPost]
         public JsonResult AutoCompleteBinome(string nom)
         {

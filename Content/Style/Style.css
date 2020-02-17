@@ -1,4 +1,11 @@
-﻿.modal-body2{
+﻿.center-div{
+    margin:0 auto;
+}
+.date_stat{
+    margin-right:20px;
+    float:left;
+}
+.modal-body2 {
     height: 250px;
     overflow-y: auto;
 }

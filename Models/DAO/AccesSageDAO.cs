@@ -145,5 +145,39 @@ namespace stock.Models.DAO
                 connexion.CloseRest(dataReader, command, connexion.Connection);
             }
         }
+
+        public Article GetArticleByReferences(string references)
+        {
+            Article reponse = new Article();
+            ConnexionSage connexion = new ConnexionSage();
+            SqlCommand command;
+            SqlDataReader dataReader;
+            connexion.Open();
+            string sql = "SELECT AR_Ref,AR_Design,FA_CodeFamille,CL_No2 FROM F_ARTICLE where AR_Ref='"+references+"'";
+            command = new SqlCommand(sql, connexion.Connection);
+            dataReader = command.ExecuteReader();
+            try
+            {
+                while (dataReader.Read())
+                {
+                    Article article = new Article();
+                    article.References = dataReader.GetValue(0).ToString();
+                    article.Designation = dataReader.GetValue(1).ToString();
+                    article.Code = dataReader.GetValue(2).ToString();
+                    article.Emplacement = dataReader.GetValue(3).ToString();
+                    reponse = article;
+                }
+
+                return reponse;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+            finally
+            {
+                connexion.CloseRest(dataReader, command, connexion.Connection);
+            }
+        }
     }
 }

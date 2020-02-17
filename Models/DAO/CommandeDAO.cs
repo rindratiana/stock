@@ -142,10 +142,19 @@ namespace stock.Models.DAO
             transaction = connection.BeginTransaction();
             command.Connection = connection;
             command.Transaction = transaction;
+            
+            Duree duree = new Duree();
+            string idcommande = this.GetIdCommande(numero_ticket);
+            Commande commande = new Commande();
+            commande.IdCommande = Int32.Parse(idcommande);
+            duree.Commande = commande;
+            duree.HeureSortie = DateTime.Now;
+            DureeDAO dureeDAO = new DureeDAO();
             try
             {
                 this.SortieCommande(command, numero_ticket);
                 this.SortieStock(command, id_magasinier, id_binome,numero_ticket);
+                dureeDAO.UpdateDuree(command, duree, "SORTIE");
                 if (transaction != null)
                 {
                     transaction.Commit();
@@ -187,9 +196,18 @@ namespace stock.Models.DAO
             transaction = connection.BeginTransaction();
             command.Connection = connection;
             command.Transaction = transaction;
+
+            Duree duree = new Duree();
+            Commande commande = new Commande();
+            commande.IdCommande = Int32.Parse(id_commande);
+            duree.Commande = commande;
+            duree.HeureLivraison = DateTime.Now;
+            DureeDAO dureeDAO = new DureeDAO();
+
             try
             {
                 this.ValiderCommande(command, id_commande);
+                dureeDAO.UpdateDuree(command, duree, "LIVRAISON");
                 if (transaction != null)
                 {
                     transaction.Commit();
@@ -398,7 +416,7 @@ namespace stock.Models.DAO
                 throw exception;
             }
         }
-        public void createDetailsCommande(List<DetailCommande> detailCommandes)
+        public void createDetailsCommande(List<DetailCommande> detailCommandes,string id_commande)
         {
             Connexion connexion = new Connexion();
             MySqlConnection connection = connexion.GetConnection();
@@ -408,9 +426,16 @@ namespace stock.Models.DAO
             transaction = connection.BeginTransaction();
             command.Connection = connection;
             command.Transaction = transaction;
+            Commande commande = new Commande();
+            commande.IdCommande = Int32.Parse(id_commande);
+            Duree duree = new Duree();
+            duree.Commande = commande;
+            duree.HeureCommande = DateTime.Now;
+            DureeDAO dureeDAO = new DureeDAO();
             try
             {
-                for(int i = 0; i < detailCommandes.Count; i++) { 
+                dureeDAO.ValiderDuree(command, duree);
+                for (int i = 0; i < detailCommandes.Count; i++) { 
                     this.AjoutDetailsCommande(command, detailCommandes[i]);
                 }
                 if (transaction != null)

@@ -172,7 +172,7 @@ namespace stock.Models.Classe.Stock
                     {
                         detailCommandes[i].IdCommande = Int32.Parse(idCommande);
                     }
-                    commandeDao.createDetailsCommande(detailCommandes);
+                    commandeDao.createDetailsCommande(detailCommandes,idCommande);
                 }
             }
             catch(Exception exception)
