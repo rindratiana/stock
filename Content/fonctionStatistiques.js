@@ -1,4 +1,5 @@
-﻿function getStatistiqueMouvement(dateDebut, dateFin) {
+﻿
+function getStatistiqueMouvement(dateDebut, dateFin) {
     $(document).ready(function () {
         $.ajax({
             url: '/Stock/GetStatCommandesMouvement/',
