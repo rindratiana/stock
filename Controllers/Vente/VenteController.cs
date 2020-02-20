@@ -70,8 +70,8 @@ namespace stock.Controllers.Vente
             try
             {
                 Commande commande = new Commande();
-                commande.Valider(id_commande);
-                return Json("Clôture du ticket fait avec succès");
+                Commande temp = commande.Valider(id_commande);
+                return Json(temp);
             }
             catch (Exception exception)
             {

@@ -12,6 +12,19 @@ namespace stock.Controllers.Login
 {
     public class LoginController : Controller
     {
+        public ActionResult Deconnecter()
+        {
+            try
+            {
+                Session.Remove("utilisateur");
+                return View("Login");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.erreur = ex.Message;
+                return View("Login");
+            }
+        }
         public ActionResult Register()
         {
             Poste poste = new Poste();
@@ -83,9 +96,18 @@ namespace stock.Controllers.Login
                     case "2":
                         ViewBag.date = DateTime.Now.ToString("yyyy-MM-dd");
                         List<Commande> commandeEncours = commande.GetListeToutCommandeEnCours();
+                        string titre = "";
+                        if (commandeEncours.Count == 0)
+                        {
+                            titre = "Attente commande";
+                        }
+                        else
+                        {
+                            titre = "Commande en cours";
+                        }
+                        ViewBag.titre = titre;
                         ViewData["commandeEnCours"] = commandeEncours;
                         ViewBag.espaceStock = "ok";
-                        ViewBag.titre = "Commande en cours";
                         ViewBag.userName = utilisateur.Prenoms;
                         return View("Accueil_stock");
                     default:

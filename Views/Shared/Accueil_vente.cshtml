@@ -92,10 +92,18 @@
                 contentType: "application/json; charset=utf-8"
             })
                 .done(function (response) {
-                    $("#" + id_commande + "").remove();
-                    $("#message").text("Clôture avec succès");
-                    $("#message").css("color", "green");
-                    $("#modal_message").modal("show");
+                    if (response.Etat != "110") {
+                        $("#message").text("Attente sortie au niveau stock");
+                        $("#message").css("color", "red");
+                        $("#modal_message").modal("show");
+                    }
+                    else {
+                        $("#" + id_commande + "").remove();
+                        $("#message").text("Clôture avec succès");
+                        $("#message").css("color", "green");
+                        $("#modal_message").modal("show");
+                    }
+                    
                 })
                 .fail(function (error) {
                     alert(alert(error));
@@ -217,7 +225,7 @@
 <div class="container-fluid">
     <div class="row">
         <!-- left column -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <!-- general form elements -->
             <div class="card card-primary">
                 <div class="card-header">
@@ -238,22 +246,10 @@
                         </div>
                     }
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="num_facture">Numéro facture/BL</label>
                                 <input type="text" class="form-control" id="numero" placeholder="N* facture/BL" name="numerocomplete">
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label for="caissier">Caissier</label>
-                                <input type="text" class="form-control" id="caissier" placeholder="Mendrika" disabled>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label for="comptoir">Comptoir</label>
-                                <input type="text" class="form-control" id="comptoir" placeholder="Comptoir" name="comptoir" disabled>
                             </div>
                         </div>
                     </div>
@@ -265,7 +261,7 @@
             </div>
             <!-- /.card -->
         </div>
-        <div class="col-md-6">
+        <div class="col-md-8">
             <!-- general form elements -->
             <div class="card card-primary">
                 <div class="card-header">

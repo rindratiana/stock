@@ -97,12 +97,20 @@ namespace stock.Models.Classe.Stock
                 throw exception;
             }
         }
-        public void Valider(string id_commande)
+        public Commande Valider(string id_commande)
         {
             try
             {
                 CommandeDAO commandeDAO = new CommandeDAO();
-                commandeDAO.Valider(id_commande);
+                Commande commande = commandeDAO.GetCommandeById(id_commande);
+                if(commande.Etat != "110")
+                {
+                    return commande;
+                }
+                else { 
+                    commandeDAO.Valider(id_commande);
+                    return commande;
+                }
             }
             catch(Exception exception)
             {

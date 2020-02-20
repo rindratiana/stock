@@ -165,7 +165,17 @@ namespace stock.Controllers.Stock
                         Commande commande = new Commande();
                         List<Commande> commandeEncours = commande.GetListeToutCommandeEnCours();
                         ViewData["commandeEnCours"] = commandeEncours;
-                        ViewBag.titre = "Commande en cours";
+                        string titre = "";
+                        if (commandeEncours.Count == 0)
+                        {
+                            titre = "Attente commande";
+                        }
+                        else
+                        {
+                            titre = "Commande en cours";
+                        }
+                        ViewBag.titre = titre;
+                        ViewBag.espaceStock = "ok";
                         ViewBag.userName = utilisateur.Prenoms;
                         return View("Accueil_stock");
                     }
@@ -190,9 +200,35 @@ namespace stock.Controllers.Stock
         }
         public ActionResult Statistiques()
         {
-            ViewBag.date = DateTime.Now.ToString("yyyy-MM-dd");
-            ViewBag.titre = "Statistiques";
-            return View("Statistiques");
+            try
+            {
+                if (HttpContext.Session["utilisateur"] == null)
+                {
+                    ViewBag.erreur = "Veuillez vous connecter d'abord";
+                    return View("Login");
+                }
+                else
+                {
+                    Utilisateur utilisateur = HttpContext.Session["utilisateur"] as Utilisateur;
+                    if (utilisateur.Poste.IdPoste == "2")
+                    {
+                        ViewBag.date = DateTime.Now.ToString("yyyy-MM-dd");
+                        ViewBag.userName = utilisateur.Prenoms;
+                        ViewBag.espaceStock = "ok";
+                        ViewBag.titre = "Statistiques";
+                        return View("Statistiques");
+                    }
+                    else
+                    {
+                        ViewBag.erreur = "Veuillez vous connecter en tant qu'utilisateur Magasinier";
+                        return View("Login");
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
         }
         public ActionResult Import()
         {

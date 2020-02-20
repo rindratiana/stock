@@ -1952,8 +1952,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Accueil.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
-    <Content Include="Views\Vente\Accueil_vente.cshtml" />
-    <Content Include="Views\Stock\Accueil_stock.cshtml" />
     <Content Include="Views\Stock\Import.cshtml" />
     <Content Include="Views\Stock\Statistiques.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
@@ -1966,6 +1964,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Views\Mother\" />
     <Folder Include="Views\Utilisateur\" />
+    <Folder Include="Views\Vente\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

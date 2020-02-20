@@ -409,6 +409,44 @@ namespace stock.Models.DAO
                 }
             }
         }
+        public Commande GetCommandeById(string id_commande)
+        {
+            Connexion connexion = new Connexion();
+            string query = "SELECT * FROM commande where ID_COMMANDE='" + id_commande + "'";
+            MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
+            AccesSageDAO accesSageDAO = new AccesSageDAO();
+            MySqlDataReader dataReader;
+            //Creation d'une liste
+            Commande reponse = new Commande();
+            try
+            {
+                //Ouverture connexion
+                if (connexion.OpenConnection() == true)
+                {
+                    //Excecution de la commande
+                    dataReader = command.ExecuteReader();
+
+                    //Lecture des donnees et stockage dans la liste
+                    while (dataReader.Read())
+                    {
+                        Comptoir comptoir = accesSageDAO.GetComptoirByNumTicket(dataReader["NUMERO"].ToString());
+                        Commande commande = new Commande(Int32.Parse(dataReader["id_commande"].ToString()), dataReader["DATE_COMMANDE"].ToString(), dataReader["NUMERO"].ToString(), comptoir, Int32.Parse(dataReader["CLIENT"].ToString()), dataReader["ETAT"].ToString());
+                        reponse = commande;
+                    }
+                    dataReader.Close();
+                }
+                //return
+                return reponse;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseAll(command, null, connexion.GetConnection());
+            }
+        }
         public List<Commande> GetListeToutCommandeEnCours(string etat)
         {
             Connexion connexion = new Connexion();
