@@ -50,6 +50,7 @@ namespace stock.Models.Classe.Stock
                     DetailCommande temp = listeArticleStock.Find(x => x.Article.References.Contains(listeArticleSage[i].Article.References));
                     if (temp != null)
                     {
+                        listeArticleSage[i].Comptoir = accesSageDAO.GetComptoirByNumTicket(listeArticleSage[i].Numero);
                         reponse.Add(listeArticleSage[i]);
                     }
                 }
@@ -134,10 +135,10 @@ namespace stock.Models.Classe.Stock
             try
             {
                 reponse  = commandeDAO.GetListeCommandeEnCours(comptoir,"100");
-                //Si validation est au niveau stock
-                if (reponse.Count == 0)
+                List<Commande> commandeValiderStock = commandeDAO.GetListeCommandeEnCours(comptoir, "110");
+                for(int i = 0; i < commandeValiderStock.Count; i++)
                 {
-                    reponse = commandeDAO.GetListeCommandeEnCours(comptoir, "110");
+                    reponse.Add(commandeValiderStock[i]);
                 }
                 return reponse;
             }

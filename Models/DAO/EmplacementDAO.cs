@@ -77,7 +77,7 @@ namespace stock.Models.DAO
         public List<StatEmplacement> GetStatEmplacements()
         {
             Connexion connexion = new Connexion();
-            string query = "select emplacement, count(*) as total from detail_commande group by emplacement";
+            string query = "select emplacement, count(*) as total from detail_commande join commande on commande.id_commande=detail_commande.id_commande where commande.client = '1' and commande.etat='111' group by emplacement";
             MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
             MySqlDataReader dataReader;
             //Creation d'une liste
@@ -122,7 +122,7 @@ namespace stock.Models.DAO
         public List<StatEmplacement> GetStatEmplacementsEntreDeuxDates(string dateDebut, string dateFin)
         {
             Connexion connexion = new Connexion();
-            string query = "select emplacement, count(*) as total from detail_commande join commande on commande.id_commande=detail_commande.id_commande where date_commande<='"+dateFin+"' and date_commande>='"+dateDebut+"' group by emplacement";
+            string query = "select emplacement, count(*) as total from detail_commande join commande on commande.id_commande=detail_commande.id_commande where commande.client = '1' and commande.etat='111' and date_commande<='" + dateFin+"' and date_commande>='"+dateDebut+"' group by emplacement";
             MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
             MySqlDataReader dataReader;
             //Creation d'une liste

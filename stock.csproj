@@ -173,6 +173,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Login\LoginController.cs" />
+    <Compile Include="Controllers\MotherController.cs" />
     <Compile Include="Controllers\Stock\StockController.cs" />
     <Compile Include="Controllers\Utilisateur\UtilisateurController.cs" />
     <Compile Include="Controllers\Vente\VenteController.cs" />
@@ -187,14 +188,19 @@
     <Compile Include="Models\Classe\Stock\DetailCommande.cs" />
     <Compile Include="Models\Classe\Stock\Duree.cs" />
     <Compile Include="Models\Classe\Stock\Emplacement.cs" />
+    <Compile Include="Models\Classe\Stock\Poste.cs" />
     <Compile Include="Models\Classe\Stock\StatArticles.cs" />
+    <Compile Include="Models\Classe\Stock\StatCommande.cs" />
+    <Compile Include="Models\Classe\Stock\StatDuree.cs" />
     <Compile Include="Models\Classe\Stock\StatEmplacement.cs" />
+    <Compile Include="Models\Classe\Utilisateurs\LoginUsers.cs" />
     <Compile Include="Models\Classe\Utilisateurs\Utilisateur.cs" />
     <Compile Include="Models\DAO\AccesSageDAO.cs" />
     <Compile Include="Models\DAO\CommandeDAO.cs" />
     <Compile Include="Models\DAO\Connexion.cs" />
     <Compile Include="Models\DAO\DureeDAO.cs" />
     <Compile Include="Models\DAO\EmplacementDAO.cs" />
+    <Compile Include="Models\DAO\PosteDAO.cs" />
     <Compile Include="Models\DAO\UtilisateurDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -209,6 +215,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\fonctionInscription.js" />
     <Content Include="Content\fonctionStatistiques.js" />
     <Content Include="Content\fonctionStock.js" />
     <Content Include="Content\Style\jquery.min.css" />
@@ -1950,9 +1957,14 @@
     <Content Include="Views\Stock\Import.cshtml" />
     <Content Include="Views\Stock\Statistiques.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
+    <Content Include="Views\Login\Inscription.cshtml" />
+    <Content Include="Views\Shared\Accueil_vente.cshtml" />
+    <Content Include="Views\Shared\Login.cshtml" />
+    <Content Include="Views\Shared\Accueil_stock.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Mother\" />
     <Folder Include="Views\Utilisateur\" />
   </ItemGroup>
   <ItemGroup>

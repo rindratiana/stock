@@ -12,7 +12,6 @@
                     <div class="date_stat">
                         <div class="col-md-5">
                             <div class="form-group">
-                                <label>Date début:</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
@@ -23,11 +22,10 @@
                                 </div>
                             </div>
                         </div>
-                        </div>
+                    </div>
                     <div class="date_stat">
                         <div class="col-md-5">
                             <div class="form-group">
-                                <label>Date fin:</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
@@ -37,21 +35,62 @@
                                     </div>
                                 </div>
                             </div>
-                            </div>
                         </div>
+                    </div>
                     <div class="date_stat">
                         <div class="col-md-5">
                             <div class="form-group">
-                                <label> </label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <button onclick="getStatistique()" id="dateStatistique" type="button" class="btn btn-primary" style="margin-top:8px">Statistique</button>
+                                        <button onclick="getStatistique()" id="dateStatistique" type="button" class="btn btn-primary">Statistique</button>
                                     </div>
                                 </div>
                             </div>
-                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-8">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3><div id="moyenne_heure"></div></h3>
+                    <p>Durée moyenne de livraison</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer"></a>
+            </div>
+        </div>
+        <div class="col-lg-4 col-8">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3><div id="nombre_commande_annule"></div></h3>
+
+                    <p>Commande(s) annulée</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer"></a>
+            </div>
+        </div>
+        <div class="col-lg-4 col-8">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3><div id="mouvement"></div></h3>
+                    <p>Nombre de mouvements</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer"></a>
             </div>
         </div>
     </div>

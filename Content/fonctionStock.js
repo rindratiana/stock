@@ -135,6 +135,7 @@ function getListeArticle(numero_ticket) {
             contentType: "application/json; charset=utf-8"
         })
             .done(function (response) {
+                console.log(response);
                 let data = response;
                 $("#carte").append("<div id=\"corps" + numero_ticket + "\" class=\"row\"><div class=\"col-sm-12\"><div class=\"card card-primary\"><div class=\"card-header\"><h3 class=\"card-title\">Ticket n* " + numero_ticket+"</h3></div><div class=\"card-body\">" +
                     "<div id=\"" + numero_ticket + "\" class=\"row\"><div class= \"col-sm-8\"><div class=\"form-group\"><label for=\"designation\">Désignation</label></div></div><div class=\"col-sm-2\"><div class=\"form-group\"><label for=\"quantite\">Quantités</label></div></div><div class=\"col-sm-2\"><div class=\"form-group\"><label for=\"comptoir\">Comptoir</label></div></div></div>" +
@@ -142,7 +143,7 @@ function getListeArticle(numero_ticket) {
                 for (var i = 0; i < data.length; i++) {
                     $("#" + numero_ticket+ "").append("<div class=\"col-sm-8\"><div class=\"form-group\"><input type=\"text\" class=\"form-control\" value=\"" + data[i].Article.Designation + "\" disabled></div></div>");
                     $("#" + numero_ticket + "").append("<div class=\"col-sm-2\"><div class=\"form-group\"><input type=\"text\" class=\"form-control\" value=\"" + data[i].Quantite + "\" disabled></div></div>");
-                    $("#" + numero_ticket + "").append("<div class=\"col-sm-2\"><div class=\"form-group\"><input type=\"text\" class=\"form-control\" value=\"Mendrika\" disabled></div></div>");
+                    $("#" + numero_ticket + "").append("<div class=\"col-sm-2\"><div class=\"form-group\"><input type=\"text\" class=\"form-control\" value=\"" + data[i].Comptoir.NomComptoir + "\" disabled></div></div>");
                 }
                 $("#" + numero_ticket + "").append(
                     "<div class=\"col-sm-2\">" +
@@ -171,7 +172,8 @@ $(function () {
         $('#notif2').text(indexActuel.toString() + " notification(s)");
         playSound("/Content/Uploads/notif.mp3");
         var listeNotif = $("#notification");
-        listeNotif.append("<div id=\"notif" + numero_ticket+"\"><a href=\"javascript:getListeArticle(" + numero_ticket + ")\" class=\"dropdown-item\"><i class=\"fas fa-envelope mr-2\"></i>" + numero_ticket +"</a><div class=\"dropdown-divider\"></div></div>");
+        listeNotif.append("<div id=\"notif" + numero_ticket + "\"><a href=\"javascript:getListeArticle(" + numero_ticket + ")\" class=\"dropdown-item\"><i class=\"fas fa-envelope mr-2\"></i>" + numero_ticket + "</a><div class=\"dropdown-divider\"></div></div>");
+        
     }
     $.connection.hub.start();
 });

@@ -11,6 +11,97 @@ namespace stock.Models.DAO
     public class CommandeDAO
     {
         public CommandeDAO() { }
+        public StatCommande GetStatCommandesMouvement(string dateDebut, string dateFin)
+        {
+            Connexion connexion = new Connexion();
+            string query = "";
+            if (dateDebut == "" && dateFin == "")
+            {
+                query = "SELECT count(*) as total FROM commande where ETAT='111' and client='1'";
+            }
+            else
+            {
+                query = "SELECT count(*) as total FROM commande where ETAT='111' and date_commande<='" + dateFin + "' and date_commande>='" + dateDebut + "' and client='1'";
+            }
+            MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
+            AccesSageDAO accesSageDAO = new AccesSageDAO();
+            MySqlDataReader dataReader;
+            //Creation d'une liste
+            StatCommande reponse = new StatCommande();
+            try
+            {
+                //Ouverture connexion
+                if (connexion.OpenConnection() == true)
+                {
+                    //Excecution de la commande
+                    dataReader = command.ExecuteReader();
+
+                    //Lecture des donnees et stockage dans la liste
+                    while (dataReader.Read())
+                    {
+                        StatCommande stat = new StatCommande();
+                        stat.Nombre = Int32.Parse(dataReader["total"].ToString());
+                        reponse = stat;
+                    }
+                    dataReader.Close();
+                }
+                //return
+                return reponse;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseAll(command, null, connexion.GetConnection());
+            }
+        }
+        public StatCommande GetStatCommandesAnnule(string dateDebut, string dateFin)
+        {
+            Connexion connexion = new Connexion();
+            string query = "";
+            if(dateDebut=="" && dateFin == "") { 
+                query = "SELECT count(*) as total FROM commande where ETAT='000' and client='1'";
+            }
+            else
+            {
+                query = "SELECT count(*) as total FROM commande where ETAT='000' and date_commande<='"+dateFin+"' and date_commande>='"+dateDebut+"' and client='1'";
+            }
+            MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
+            AccesSageDAO accesSageDAO = new AccesSageDAO();
+            MySqlDataReader dataReader;
+            //Creation d'une liste
+            StatCommande reponse = new StatCommande();
+            try
+            {
+                //Ouverture connexion
+                if (connexion.OpenConnection() == true)
+                {
+                    //Excecution de la commande
+                    dataReader = command.ExecuteReader();
+
+                    //Lecture des donnees et stockage dans la liste
+                    while (dataReader.Read())
+                    {
+                        StatCommande stat = new StatCommande();
+                        stat.Nombre = Int32.Parse(dataReader["total"].ToString());
+                        reponse = stat;
+                    }
+                    dataReader.Close();
+                }
+                //return
+                return reponse;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseAll(command, null, connexion.GetConnection());
+            }
+        }
         public List<DetailCommande> GetArticlesCommandes(string numerocomplete){
             Connexion connexion = new Connexion();
             string query = "select commande.numero, detail_commande.reference_article from detail_commande join commande on commande.id_commande = detail_commande.id_commande where commande.numero='"+numerocomplete+"'";

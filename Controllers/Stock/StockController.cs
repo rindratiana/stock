@@ -1,4 +1,5 @@
-﻿using stock.Models.Classe.Stock;
+﻿using stock.Models.Classe;
+using stock.Models.Classe.Stock;
 using stock.Models.DAO;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,50 @@ namespace stock.Controllers.Stock
 {
     public class StockController : Controller
     {
+        [HttpPost]
+        public JsonResult GetStatCommandesMouvement(string dateDebut, string dateFin)
+        {
+            try
+            {
+                StatCommande statDuree = new StatCommande();
+                StatCommande reponse = statDuree.GetStatCommandesMouvement(dateDebut, dateFin);
+                return Json(reponse);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
+        public JsonResult GetStatCommandesAnnule(string dateDebut, string dateFin)
+        {
+            try
+            {
+                StatCommande statDuree = new StatCommande();
+                StatCommande reponse = statDuree.GetStatCommandesAnnule(dateDebut,dateFin);
+                return Json(reponse);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
+        public JsonResult GetStatDuree(string dateDebut, string dateFin)
+        {
+            try
+            {
+                StatDuree statDuree = new StatDuree();
+                double reponse = statDuree.GetStatDuree(dateDebut, dateFin);
+                var minutes = (int)(reponse);
+                var remainingSeconds = (int)((reponse - minutes) * 60);
+                return Json("00:"+ string.Format("{0:00}", minutes) + ':' + remainingSeconds.ToString("00"));
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
         //GetStatistiquesByEmplacement
         [HttpPost]
         public JsonResult GetStatistiquesByEmplacement(string dateDebut, string dateFin,string numeroEmplacements)
@@ -105,12 +150,36 @@ namespace stock.Controllers.Stock
         // GET: Stock
         public ActionResult Index()
         {
-            ViewBag.date = DateTime.Now.ToString("yyyy-MM-dd");
-            Commande commande = new Commande();
-            List<Commande> commandeEncours = commande.GetListeToutCommandeEnCours();
-            ViewData["commandeEnCours"] = commandeEncours;
-            ViewBag.titre = "Commande en cours";
-            return View("Accueil_stock");
+            try
+            {
+                if (HttpContext.Session["utilisateur"] == null)
+                {
+                    ViewBag.erreur = "Veuillez vous connecter d'abord";
+                    return View("Login");
+                }
+                else
+                {
+                    Utilisateur utilisateur = HttpContext.Session["utilisateur"] as Utilisateur;
+                    if (utilisateur.Poste.IdPoste == "2") { 
+                        ViewBag.date = DateTime.Now.ToString("yyyy-MM-dd");
+                        Commande commande = new Commande();
+                        List<Commande> commandeEncours = commande.GetListeToutCommandeEnCours();
+                        ViewData["commandeEnCours"] = commandeEncours;
+                        ViewBag.titre = "Commande en cours";
+                        ViewBag.userName = utilisateur.Prenoms;
+                        return View("Accueil_stock");
+                    }
+                    else
+                    {
+                        ViewBag.erreur = "Veuillez vous connecter en tant qu'utilisateur Magasinier";
+                        return View("Login");
+                    }
+                }
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
         }
         [HttpPost]
         public JsonResult GetNotifications()

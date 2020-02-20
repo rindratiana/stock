@@ -1,4 +1,58 @@
-﻿function getStatistique() {
+﻿function getStatistiqueMouvement(dateDebut, dateFin) {
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Stock/GetStatCommandesMouvement/',
+            data: "{ 'dateDebut': '" + dateDebut + "','dateFin':'" + dateFin + "'}",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8"
+        })
+            .done(function (response) {
+                $("#mouvement").text(response.Nombre);
+            })
+            .fail(function (error) {
+                alert(alert(error));
+            })
+    });
+}
+
+function getStatistiqueCommandeAnnule(dateDebut, dateFin) {
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Stock/GetStatCommandesAnnule/',
+            data: "{ 'dateDebut': '" + dateDebut + "','dateFin':'" + dateFin + "'}",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8"
+        })
+            .done(function (response) {
+                $("#nombre_commande_annule").text(response.Nombre);
+            })
+            .fail(function (error) {
+                alert(alert(error));
+            })
+    });
+}
+
+function getStatistiqueDuree(dateDebut, dateFin) {
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Stock/GetStatDuree/',
+            data: "{ 'dateDebut': '" + dateDebut + "','dateFin':'" + dateFin + "'}",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8"
+        })
+            .done(function (response) {
+                $("#moyenne_heure").text(response);
+            })
+            .fail(function (error) {
+                alert(alert(error));
+            })
+    });
+}
+
+function getStatistique() {
     var dateDebut = $("#date_debut").val();
     var dateFin = $("#date_fin").val();
     if (dateDebut == "" || dateFin == "" || dateFin < dateDebut) {
@@ -39,6 +93,13 @@
                     }
                     google.visualization.events.addListener(chart, 'select', selectHandler);
                     chart.draw(figures, options);
+
+                    //Statistique durée
+                    getStatistiqueDuree(dateDebut, dateFin);
+                    //Statistique commande annulé
+                    getStatistiqueCommandeAnnule(dateDebut, dateFin);
+                    //Statistique mouvements
+                    getStatistiqueMouvement(dateDebut, dateFin);
                 })
                 .fail(function (error) {
                     alert(alert(error));
@@ -84,6 +145,15 @@ window.onload = function () {
                 }
                 google.visualization.events.addListener(chart, 'select', selectHandler);
                 chart.draw(figures, options);
+
+                //Statistique durée
+                getStatistiqueDuree("", "");
+
+                //Statistique commande annulé
+                getStatistiqueCommandeAnnule("", "");
+
+                //Statistique nombre de mouvements
+                getStatistiqueMouvement("", "");
             })
             .fail(function (error) {
                 alert(alert(error));

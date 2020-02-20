@@ -11,12 +11,43 @@ namespace stock.Controllers.Vente
 {
     public class VenteController : Controller
     {
+        
+        public VenteController(){}
         // GET: Vente
         public ActionResult Index()
         {
-            ViewBag.date = DateTime.Now.ToString("yyyy-MM-dd");
-            ViewBag.titre = "Commande";
-            return View("Accueil_vente");
+            try {
+                if (HttpContext.Session["utilisateur"] == null)
+                {
+                    ViewBag.erreur = "Veuillez vous connecter d'abord";
+                    return View("Login");
+                }
+                else {
+                    Utilisateur utilisateur = HttpContext.Session["utilisateur"] as Utilisateur;
+                    if (utilisateur.Poste.IdPoste == "1")
+                    {
+                        AccesSageDAO accesSageDAO = new AccesSageDAO();
+                        Commande commande = new Commande();
+                        Comptoir comptoir = accesSageDAO.GetComptoirByNomCaisse(utilisateur.Identifiants);
+                        List<Commande> listeCommandeEnCours = commande.GetListeCommandeEnCours(comptoir);
+                        ViewData["listeCommandeEnCours"] = listeCommandeEnCours;
+                        ViewBag.date = DateTime.Now.ToString("yyyy-MM-dd");
+                        ViewBag.espaceVente = "ok";
+                        ViewBag.titre = "Commande";
+                        ViewBag.userName = utilisateur.Prenoms;
+                        return View("Accueil_vente");
+                    }
+                    else
+                    {
+                        ViewBag.erreur = "Veuillez vous connecter en tant qu'utilisateur Auxiliaire de vente";
+                        return View("Login");
+                    }
+                }
+            }
+            catch(Exception exception)
+            {
+                return View("Login");
+            }
         }
         [HttpPost]
         public JsonResult Annulation(string id_commande)
@@ -80,8 +111,9 @@ namespace stock.Controllers.Vente
         {
             try
             {
+                Utilisateur utilisateur = HttpContext.Session["utilisateur"] as Utilisateur;
                 AccesSageDAO acces = new AccesSageDAO();
-                List<string> liste = acces.GetNumeroPiece(numerocomplete);
+                List<string> liste = acces.GetNumeroPiece(numerocomplete,utilisateur);
                 return Json(liste);
             }
             catch (Exception exception)
@@ -106,34 +138,54 @@ namespace stock.Controllers.Vente
         {
             try
             {
-                int taille = Int32.Parse(Request.Form["taille"]);
-                string numero_ticket = Request.Form["numero_ticket"];
-                string client = Request.Form["client"];
-                List<DetailCommande> listeCommande = new List<DetailCommande>();
-                
-                for(int i = 0; i < taille; i++)
+                if(HttpContext.Session["utilisateur"] == null)
                 {
-                    if(Request.Form["article_checked" + i + ""] == "on") { 
-                        DetailCommande commandeTemp = new DetailCommande();
-                        Article articleTemp = new Article();
-                        articleTemp.References = Request.Form["ref_article"+ i +""];
-                        commandeTemp.Article = articleTemp;
-                        commandeTemp.Quantite = Int32.Parse(Request.Form["quantite"+i+""]);
-                        commandeTemp.Emplacement = Int32.Parse(Request.Form["emplacement" + i + ""]);
-                        listeCommande.Add(commandeTemp);
+                    ViewBag.erreur = "Veuillez vous connecter d'abord";
+                    return View("Login");
+                }
+                else
+                {
+                    Utilisateur utilisateur = HttpContext.Session["utilisateur"] as Utilisateur;
+                    if (utilisateur.Poste.IdPoste == "1")
+                    {
+                        int taille = Int32.Parse(Request.Form["taille"]);
+                        string numero_ticket = Request.Form["numero_ticket"];
+                        string client = Request.Form["client"];
+                        List<DetailCommande> listeCommande = new List<DetailCommande>();
+
+                        for (int i = 0; i < taille; i++)
+                        {
+                            if (Request.Form["article_checked" + i + ""] == "on")
+                            {
+                                DetailCommande commandeTemp = new DetailCommande();
+                                Article articleTemp = new Article();
+                                articleTemp.References = Request.Form["ref_article" + i + ""];
+                                commandeTemp.Article = articleTemp;
+                                commandeTemp.Quantite = Int32.Parse(Request.Form["quantite" + i + ""]);
+                                commandeTemp.Emplacement = Int32.Parse(Request.Form["emplacement" + i + ""]);
+                                listeCommande.Add(commandeTemp);
+                            }
+                        }
+
+                        Commande commande = new Commande();
+                        commande.Client = commande.ParseInt(client, "Veuillez choisir un client");
+                        commande.CreateCommande(listeCommande, numero_ticket);
+
+                        AccesSageDAO accesSageDAO = new AccesSageDAO();
+                        Comptoir comptoir = accesSageDAO.GetComptoirByNomCaisse(utilisateur.Identifiants);
+                        List<Commande> listeCommandeEnCours = commande.GetListeCommandeEnCours(comptoir);
+                        ViewBag.espaceVente = "ok";
+                        ViewData["listeCommandeEnCours"] = listeCommandeEnCours;
+                        ViewBag.message = "Commande envoyé";
+                        ViewBag.userName = utilisateur.Prenoms;
+                        return View("Accueil_vente");
+                    }
+                    else
+                    {
+                        ViewBag.erreur = "Veuillez vous connecter en tant qu'utilisateur Auxiliaire de vente";
+                        return View("Login");
                     }
                 }
-
-                Commande commande = new Commande();
-                commande.Client = commande.ParseInt(client,"Veuillez choisir un client");
-                commande.CreateCommande(listeCommande,numero_ticket);
-
-                AccesSageDAO accesSageDAO = new AccesSageDAO();
-                Comptoir comptoir = accesSageDAO.GetComptoirByNumTicket(numero_ticket);
-                List<Commande> listeCommandeEnCours = commande.GetListeCommandeEnCours(comptoir);
-                ViewData["listeCommandeEnCours"] = listeCommandeEnCours;
-                ViewBag.message = "Commande envoyé";
-                return View("Accueil_vente");
             }
             catch(Exception exception)
             {
