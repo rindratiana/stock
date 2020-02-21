@@ -1959,6 +1959,7 @@
     <Content Include="Views\Shared\Accueil_vente.cshtml" />
     <Content Include="Views\Shared\Login.cshtml" />
     <Content Include="Views\Shared\Accueil_stock.cshtml" />
+    <Content Include="Views\Login\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
