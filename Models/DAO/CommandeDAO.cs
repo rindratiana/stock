@@ -11,6 +11,124 @@ namespace stock.Models.DAO
     public class CommandeDAO
     {
         public CommandeDAO() { }
+        public List<Commande> GetListeCommande(string dateDebut, string dateFin)
+        {
+            Connexion connexion = new Connexion();
+            string query = "";
+            if (dateDebut == "" && dateFin == "")
+            {
+                query = "select * from commande join duree on duree.id_commande =commande.id_commande join sortie on sortie.id_commande=commande.id_commande where commande.ETAT = '111' and commande.CLIENT='1'";
+            }
+            else
+            {
+                query = "select * from commande join duree on duree.id_commande =commande.id_commande join sortie on sortie.id_commande=commande.id_commande where commande.ETAT = '111' and commande.CLIENT='1' and commande.date_commande<='" + dateFin + "' and commande.date_commande>='" + dateDebut + "'";
+            }
+            MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
+            AccesSageDAO accesSageDAO = new AccesSageDAO();
+            UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+            MySqlDataReader dataReader;
+            //Creation d'une liste
+            List<Commande> reponse = new List<Commande>();
+            try
+            {
+                //Ouverture connexion
+                if (connexion.OpenConnection() == true)
+                {
+                    //Excecution de la commande
+                    dataReader = command.ExecuteReader();
+
+                    //Lecture des donnees et stockage dans la liste
+                    while (dataReader.Read())
+                    {
+                        Comptoir comptoir = accesSageDAO.GetComptoirByNumTicket(dataReader["NUMERO"].ToString());
+                        Commande commande = new Commande(Int32.Parse(dataReader["id_commande"].ToString()), dataReader["DATE_COMMANDE"].ToString(), dataReader["NUMERO"].ToString(), comptoir, Int32.Parse(dataReader["CLIENT"].ToString()), dataReader["ETAT"].ToString());
+                        List<DetailCommande> detailCommandes = GetArticlesCommandes(commande.Numero);
+                        for (int i = 0; i < detailCommandes.Count; i++)
+                        {
+                            int quantite = detailCommandes[i].Quantite;
+                            detailCommandes[i].Article = accesSageDAO.GetArticleByReferences(detailCommandes[i].Article.References);
+                            detailCommandes[i].Quantite = quantite;
+                        }
+                        commande.ListeDetailCommande = detailCommandes;
+                        Duree duree = new Duree();
+                        duree.HeureCommandeString =  dataReader["HEURE_COMMANDE"].ToString();
+                        duree.HeureSortieString = dataReader["HEURE_LIVRAISON"].ToString();
+                        commande.Duree = duree;
+                        Utilisateur binome = utilisateurDAO.GetUtilisateurById(dataReader["ID_BINOME"].ToString());
+                        Utilisateur magasinier = utilisateurDAO.GetUtilisateurById(dataReader["ID_MAGASINIER"].ToString());
+                        Commande test = new Commande();
+                        test.IdCommande = Int32.Parse(dataReader["id_commande"].ToString());
+                        SortieCommande sortie = new SortieCommande(dataReader["ID_SORTIE"].ToString(),test,binome,magasinier);
+                        commande.SortieCommande = sortie;
+                        reponse.Add(commande);
+                    }
+                    dataReader.Close();
+                }
+                return reponse;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseAll(command, null, connexion.GetConnection());
+            }
+        }
+        public List<Commande> GetListeCommandeAnnule(string dateDebut, string dateFin)
+        {
+            Connexion connexion = new Connexion();
+            string query = "";
+            if (dateDebut == "" && dateFin == "")
+            {
+                query = "select * from commande where ETAT = '000' and CLIENT='1'";
+            }
+            else
+            {
+                query = "select * from commande where ETAT = '000' and CLIENT='1' and date_commande<='" + dateFin + "' and date_commande>='" + dateDebut + "'";
+            }
+            MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
+            AccesSageDAO accesSageDAO = new AccesSageDAO();
+            MySqlDataReader dataReader;
+            //Creation d'une liste
+            List<Commande> reponse = new List<Commande>();
+            try
+            {
+                //Ouverture connexion
+                if (connexion.OpenConnection() == true)
+                {
+                    //Excecution de la commande
+                    dataReader = command.ExecuteReader();
+
+                    //Lecture des donnees et stockage dans la liste
+                    while (dataReader.Read())
+                    {
+                        Comptoir comptoir = accesSageDAO.GetComptoirByNumTicket(dataReader["NUMERO"].ToString());
+                        Commande commande = new Commande(Int32.Parse(dataReader["id_commande"].ToString()), dataReader["DATE_COMMANDE"].ToString(), dataReader["NUMERO"].ToString(), comptoir, Int32.Parse(dataReader["CLIENT"].ToString()), dataReader["ETAT"].ToString());
+                        List<DetailCommande> detailCommandes = GetArticlesCommandes(commande.Numero);
+                        for(int i = 0; i < detailCommandes.Count; i++)
+                        {
+                            int quantite = detailCommandes[i].Quantite;
+                            detailCommandes[i].Article = accesSageDAO.GetArticleByReferences(detailCommandes[i].Article.References);
+                            detailCommandes[i].Quantite = quantite;
+                        }
+                        commande.ListeDetailCommande = detailCommandes;
+                        reponse.Add(commande);
+                    }
+                    dataReader.Close();
+                }
+                //return
+                return reponse;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseAll(command, null, connexion.GetConnection());
+            }
+        }
         public StatCommande GetStatCommandesMouvement(string dateDebut, string dateFin)
         {
             Connexion connexion = new Connexion();
@@ -104,7 +222,7 @@ namespace stock.Models.DAO
         }
         public List<DetailCommande> GetArticlesCommandes(string numerocomplete){
             Connexion connexion = new Connexion();
-            string query = "select commande.numero, detail_commande.reference_article from detail_commande join commande on commande.id_commande = detail_commande.id_commande where commande.numero='"+numerocomplete+"'";
+            string query = "select commande.numero, detail_commande.reference_article,detail_commande.quantite from detail_commande join commande on commande.id_commande = detail_commande.id_commande where commande.numero='" + numerocomplete+"'";
             MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
             MySqlDataReader dataReader;
             //Creation d'une liste
@@ -122,6 +240,7 @@ namespace stock.Models.DAO
                     {
                         DetailCommande detailCommande = new DetailCommande();
                         detailCommande.Numero = dataReader["numero"].ToString();
+                        detailCommande.Quantite = Int32.Parse(dataReader["quantite"].ToString());
                         Article article = new Article();
                         article.References = dataReader["reference_article"].ToString();
                         detailCommande.Article = article;

@@ -18,7 +18,128 @@ namespace stock.Models.Classe
         private string prenoms;
         private string identifiants;
         private string mdp;
+        private string etat;
+        private string etatMdp;
 
+        public List<string> GetListeIdentifiant(string identifiant)
+        {
+            UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+            try
+            {
+                return utilisateurDAO.GetListeIdentifiant(identifiant);
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public List<Utilisateur> GetUtilisateurValidation(string etat)
+        {
+            try
+            {
+                UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+                return utilisateurDAO.GetUtilisateurValidation(etat);
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public static Utilisateur GetUtilisateurById(string idutilisateur)
+        {
+            UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+            try
+            {
+                return utilisateurDAO.GetUtilisateurById(idutilisateur);
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public static void UpdateMdp(Utilisateur utilisateur)
+        {
+            UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+            try
+            {
+                MD5 md5Hash = MD5.Create();
+                string mdp = GetMd5Hash(md5Hash, utilisateur.Mdp);
+                utilisateur.Mdp = mdp;
+                utilisateurDAO.UpdateMdp(utilisateur);
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void ResetPwd(string id)
+        {
+            try
+            {
+                UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+                Utilisateur utilisateur = utilisateurDAO.GetUtilisateurById(id);
+                MD5 md5Hash = MD5.Create();
+                string mdp = GetMd5Hash(md5Hash, utilisateur.prenoms);
+                utilisateur.Mdp = mdp;
+                utilisateurDAO.ResetPwd(utilisateur);
+
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void HideUser(string id)
+        {
+            try
+            {
+                UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+                utilisateurDAO.DeleteRequest(id);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void DeleteRequest(string id)
+        {
+            try
+            {
+                UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+                utilisateurDAO.DeleteRequest(id);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void ConfirmUser(string id)
+        {
+            try
+            {
+                UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+                utilisateurDAO.ConfirmUser(id);
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public void UpdateProfil()
+        {
+            try
+            {
+                UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+                MD5 md5Hash = MD5.Create();
+                string mdp = GetMd5Hash(md5Hash, this.Mdp);
+                this.Mdp = mdp;
+                utilisateurDAO.UpdateProfil(this);
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
         public static Utilisateur Connecter(LoginUsers loginUsers)
         {
             Utilisateur utilisateur = new Utilisateur();
@@ -57,7 +178,15 @@ namespace stock.Models.Classe
                 MD5 md5Hash = MD5.Create();
                 string mdp = GetMd5Hash(md5Hash, this.Mdp);
                 this.Mdp = mdp;
-                utilisateurDAO.CreateUtilisateur(this);
+                Utilisateur utilisateurExiste = utilisateurDAO.GetUtilisateurByIdentifiant(this.identifiants);
+                if (utilisateurExiste.IdUtilisateur != null)
+                {
+                    throw new Exception("Cet utilisateur existe déjà");
+                }
+                else
+                {
+                    utilisateurDAO.CreateUtilisateur(this);
+                }
             }
             catch(Exception exception)
             {
@@ -104,6 +233,21 @@ namespace stock.Models.Classe
             }
         }
 
+        public Utilisateur GetUtilisateurByLogin(LoginUsers login)
+        {
+            try
+            {
+                UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
+                MD5 md5Hash = MD5.Create();
+                string mdpHash = GetMd5Hash(md5Hash, login.Mdp);
+                login.Mdp = mdpHash;
+                return utilisateurDAO.GetUtilisateurByLogin(login);
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
         public Utilisateur() { }
         public Utilisateur(string idUtilisateur, Poste poste, string nomUtilisateur, string prenoms, string identifiants, string mdp)
         {
@@ -193,13 +337,14 @@ namespace stock.Models.Classe
                     else
                     {
                         AccesSageDAO accesSageDAO = new AccesSageDAO();
+                        UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
                         if (this.Poste.IdPoste == "1") { 
                             Comptoir comptoir = accesSageDAO.GetComptoirByNomCaisse(value);
                             if (comptoir.IdComptoir == "") {
                                 throw new Exception("Votre identifiant doît être identique à votre nom de caisse dans SAGE");
                             }
                             else
-                            {
+                            {  
                                 identifiants = value;
                             }
                         }
@@ -227,5 +372,8 @@ namespace stock.Models.Classe
                 }
             }
         }
+
+        public string Etat { get => etat; set => etat = value; }
+        public string EtatMdp { get => etatMdp; set => etatMdp = value; }
     }
 }

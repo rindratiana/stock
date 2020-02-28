@@ -18,11 +18,11 @@ namespace stock.Models.DAO
             string query = "";
             if (dateFin == "" && dateDebut == "")
             {
-                query = "select commande.id_commande,TIMESTAMPDIFF(MINUTE,heure_commande,heure_livraison) as duree from duree join commande on commande.id_commande=duree.id_commande where ETAT='111' and client='1'";
+                query = "select commande.id_commande,TIMESTAMPDIFF(SECOND,heure_commande,heure_livraison) as duree from duree join commande on commande.id_commande=duree.id_commande where ETAT='111' and client='1'";
             }
             else
             {
-                query = "select commande.id_commande as id_commande,TIMESTAMPDIFF(MINUTE,heure_commande,heure_livraison) as duree from duree join commande on commande.id_commande=duree.id_commande where date_commande<='"+dateFin+"' and date_commande>='"+dateDebut+ "' and ETAT='111' and client='1'";
+                query = "select commande.id_commande as id_commande,TIMESTAMPDIFF(SECOND,heure_commande,heure_livraison) as duree from duree join commande on commande.id_commande=duree.id_commande where date_commande<='" + dateFin+"' and date_commande>='"+dateDebut+ "' and ETAT='111' and client='1'";
             }
             MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
             MySqlDataReader dataReader;

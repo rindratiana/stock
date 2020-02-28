@@ -29,7 +29,7 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="../../index2.html"><b>Intranet</b> Métropole</a>
+            <a href="#"><b>Intranet</b> Métropole</a>
         </div>
         <!-- /.login-logo -->
         <div class="card">
@@ -50,7 +50,7 @@
 
                 <form action="/Login/Connecter/" method="post">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="identifiant" name="identifiant">
+                        <input type="text" id="identifiant" class="form-control" placeholder="identifiant" name="identifiant">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -92,5 +92,36 @@
 
 </body>
 </html>
+<!--Autocomplete-->
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/flick/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<link rel="stylesheet" href="~/Content/Style/Style.css">
+<script>
+    $("#identifiant").autocomplete({
+        maxShowItems: 5,
+        source: function (request, response) {
+            $.ajax({
+                url: '/Utilisateur/AutoComplete/',
+                data: "{ 'identifiant': '" + request.term + "'}",
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return item;
+                    }))
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        },
+        minLength: 1
+    });
+</script>
 
 

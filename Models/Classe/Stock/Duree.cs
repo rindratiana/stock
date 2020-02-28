@@ -11,7 +11,8 @@ namespace stock.Models.Classe.Stock
         private DateTime heureCommande;
         private DateTime heureSortie;
         private DateTime heureLivraison;
-
+        private string heureSortieString;
+        private string heureCommandeString;
         public Duree(){}
 
         public Duree(Commande commande, DateTime heureCommande, DateTime heureSortie, DateTime heureLivraison)
@@ -26,5 +27,7 @@ namespace stock.Models.Classe.Stock
         public DateTime HeureCommande { get => heureCommande; set => heureCommande = value; }
         public DateTime HeureSortie { get => heureSortie; set => heureSortie = value; }
         public DateTime HeureLivraison { get => heureLivraison; set => heureLivraison = value; }
+        public string HeureSortieString { get => heureSortieString; set => heureSortieString = value; }
+        public string HeureCommandeString { get => heureCommandeString; set => heureCommandeString = value; }
     }
 }

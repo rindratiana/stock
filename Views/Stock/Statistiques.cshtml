@@ -2,26 +2,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+<script src="~/signalr/hubs"></script>
 <script src="/Content/fonctionStatistiques.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
-<script>
-    var doc = new jsPDF();
-    var specialElementHandlers = {
-        '#editor': function (element, renderer) {
-            return true;
-        }
-    };
-    function exportPDF() {
-        //var newCanvas = document.querySelector('#chartContainer');
-        var newCanvasImg = html2canvas(document.getElementById('content_statistic'))
-            .then(function (canvas) {
-                var test = canvas.toDataURL('image/jpeg', 0.5);
-                doc.addImage(test, 'JPEG', 10, 10, 280, 150);
-                doc.save('sample-file.pdf');
-            });
-    }
-</script>
 <div id="content_statistic" class="container-fluid">
+    <audio id="chatAudio" src="/Content/Uploads/notif.mp3" type="audio/mpeg" autoplay="true" muted="muted"></audio>
     <div class="row">
         <div class="col-12 col-sm-12 col-md-12">
             <div class="info-box">
@@ -80,7 +66,7 @@
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="#" class="small-box-footer"></a>
+                <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <div class="col-lg-4 col-8">
@@ -88,13 +74,12 @@
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3><div id="nombre_commande_annule"></div></h3>
-
                     <p>Commande(s) annulée</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer"></a>
+                <a href="javascript:getListeCommandeAnnule()" class="small-box-footer">Plus d'information <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <div class="col-lg-4 col-8">
@@ -107,10 +92,11 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="#" class="small-box-footer"></a>
+                <a href="javascript:getListeCommande()" class="small-box-footer">Plus d'information <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>
+    <!-- Image loader -->
     <div class="row">
         <!-- left column -->
         <div class="col-md-12">
@@ -155,6 +141,84 @@
     </div>
 </div>
 <!-- /Modal succes-->
+<!-- The modal detail -->
+<div class="modal fade" id="detail">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fas fa-info-circle"></i> Détails</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body2 modal-xl">
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Ticket</th>
+                                <th>Date</th>
+                                <th>Caisse</th>
+                                <th>Désignation</th>
+                                <th>Quantités</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_detail" style="overflow-y: scroll;">
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+    </div>
+</div>
+
+<!-- The modal detail -->
+<div class="modal" id="detail2">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fas fa-info-circle"></i> Détails</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body2 modal-xl">
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Ticket</th>
+                                <th>Date</th>
+                                <th>Caisse</th>
+                                <th>Magasinier</th>
+                                <th>Désignation</th>
+                                <th>Quantités</th>
+                                <th>Commande</th>
+                                <th>Livraison</th>
+                                <th>Durée</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_detail2">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+    </div>
+</div>
+
 <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
 {'modules':[{'name':'visualization','version':'1.1','packages':
 ['corechart']}]}"></script>

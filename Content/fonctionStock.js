@@ -1,4 +1,23 @@
-﻿function autocomplete2(idbinome) {
+﻿$(document).ready(function () {
+    $.ajax({
+        url: '/Utilisateur/TestEtatMdp/',
+        data: "{}",
+        dataType: "json",
+        type: "POST",
+        contentType: "application/json; charset=utf-8"
+    })
+        .done(function (response) {
+            console.log(response);
+            if (response == "ko") {
+                $("#modal_mdp").modal("show");
+            }
+        })
+        .fail(function (error) {
+            alert(error);
+        })
+});
+
+function autocomplete2(idbinome) {
     var id = "#binome" + idbinome;
     $(id).autocomplete({
         maxShowItems: 5,

@@ -1,0 +1,93 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <div class="container-fluid">
+        @if (ViewBag.message != null)
+        {
+            <h4 style="text-align:center;color:green;margin-bottom: 25px;"><i class="fas fa-info-circle"></i> @ViewBag.message</h4>
+        }
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Utilisateur de l'application</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Poste</th>
+                                    <th>Reset pwd</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewData["utilisateursValide"] != null)
+                                {
+                                    foreach (stock.Models.Classe.Utilisateur utilisateur in ViewData["utilisateursValide"] as List<stock.Models.Classe.Utilisateur>)
+                                    {
+                                <tr>
+                                    <td>@utilisateur.NomUtilisateur @utilisateur.Prenoms</td>
+                                    <td>@utilisateur.Poste.NomPoste</td>
+                                    <td><a href="/Utilisateur/ResetPwd?id=@utilisateur.IdUtilisateur"><button type="button" onclick=""><i class="fas fa-refresh"></i></button></a></td>
+                                    <td><a href="/Utilisateur/DeleteUser?id=@utilisateur.IdUtilisateur"><button type="button" onclick=""><i class="fas fa-trash"></i></button></a></td>
+                                </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Demande d'inscription</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Utilisateur</th>
+                                    <th>Identifiant</th>
+                                    <th>Poste</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewData["utilisateursNonValide"] != null)
+                                {
+                                    foreach (stock.Models.Classe.Utilisateur utilisateurNv in ViewData["utilisateursNonValide"] as List<stock.Models.Classe.Utilisateur>)
+                                    {
+                                        <tr>
+                                            <td>@utilisateurNv.NomUtilisateur @utilisateurNv.Prenoms</td>
+                                            <td>@utilisateurNv.Identifiants</td>
+                                            <td>@utilisateurNv.Poste.NomPoste</td>
+                                            <td>
+                                                <div style="display:inline">
+                                                    <a href="/Utilisateur/ConfirmUser?id=@utilisateurNv.IdUtilisateur"><button type="button" onclick=""><i class="fas fa-check"></i></button></a>
+                                                    <a href="/Utilisateur/DeleteRequest?id=@utilisateurNv.IdUtilisateur"><button type="button" onclick=""><i class="fas fa-trash"></i></button></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->

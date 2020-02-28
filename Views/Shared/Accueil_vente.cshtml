@@ -4,6 +4,24 @@
 <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
 <script type="text/javascript">
+    $( document ).ready(function() {
+        $.ajax({
+        url: '/Utilisateur/TestEtatMdp/',
+        data: "{}",
+        dataType: "json",
+        type: "POST",
+        contentType: "application/json; charset=utf-8"
+        })
+            .done(function (response) {
+                console.log(response);
+            if (response == "ko") {
+                $("#modal_mdp").modal("show");
+            }
+        })
+        .fail(function (error) {
+            alert(error);
+        })
+    });
 
     $(function () {
         var chat = $.connection.hubClient;
@@ -367,7 +385,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -423,3 +440,59 @@
                     </div>
                 </div>
                 <!-- /Modal succes-->
+
+<!-- The modal modal mdp -->
+<div class="modal fade" id="modal_mdp" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-info-circle"></i> Votre mot de passe a été réinitialisé, veuillez le changer pour la securité de votre compte</h5>
+            </div>
+            <!-- Modal body -->
+            <form action="/Utilisateur/UpdatePwd/" method="post">
+                <div class="modal-body">
+                    @if (ViewBag.message_reset != null)
+                    {
+                        <p style="color:red;text-align:center">@ViewBag.message_reset</p>
+                    }
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input type="password" class="form-control" id="mdp1" name="mdp1" placeholder="Votre nouveau mot de passe">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <p id="label_mdp2"></p>
+                            <input type="password" class="form-control" id="mdp2" name="mdp2" placeholder="Confirmation de votre mot de passe">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer justify-content-between">
+                    <a href="/Login/Deconnecter/"><button type="button" class="btn btn-default">Retour</button></a>
+                    <button type="submit" class="btn btn-primary">Modifier mot de passe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /Modal mdp-->
+
+<script>
+    $('#mdp2').keyup(function () {
+        if ($('#mdp2').val() != $('#mdp1').val()) {
+            $("#label_mdp2").show();
+            $("#label_mdp2").text("Vérifiez bien votre nouveau mot de passe");
+            $("#label_mdp2").css("color", "red");
+            $("#mdp2").addClass("form-control is-invalid");
+        }
+        else {
+            $("#mdp2").removeClass("form-control is-invalid");
+            $("#mdp2").addClass("form-control");
+            $("#label_mdp2").text("");
+            $("#label_mdp2").css("color", "black");
+        }
+    });
+</script>

@@ -94,7 +94,14 @@ namespace stock.Models.DAO
                     while (dataReader.Read())
                     {
                         StatEmplacement stat = new StatEmplacement();
-                        stat.Emplacement = GetEmplacementsByNumero(dataReader["emplacement"].ToString());
+                        if (dataReader["emplacement"].ToString() == "0")
+                        {
+                            stat.Emplacement = new Emplacement("0", "Stock");
+                        }
+                        else
+                        {
+                            stat.Emplacement = GetEmplacementsByNumero(dataReader["emplacement"].ToString());
+                        }
                         stat.Quantite = Int32.Parse(dataReader["total"].ToString());
                         reponse.Add(stat);
                     }
@@ -139,7 +146,14 @@ namespace stock.Models.DAO
                     while (dataReader.Read())
                     {
                         StatEmplacement stat = new StatEmplacement();
-                        stat.Emplacement = GetEmplacementsByNumero(dataReader["emplacement"].ToString());
+                        if (dataReader["emplacement"].ToString() == "0")
+                        {
+                            stat.Emplacement = new Emplacement("0", "Stock");
+                        }
+                        else
+                        {
+                            stat.Emplacement = GetEmplacementsByNumero(dataReader["emplacement"].ToString());
+                        }
                         stat.Quantite = Int32.Parse(dataReader["total"].ToString());
                         reponse.Add(stat);
                     }

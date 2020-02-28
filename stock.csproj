@@ -189,6 +189,7 @@
     <Compile Include="Models\Classe\Stock\Duree.cs" />
     <Compile Include="Models\Classe\Stock\Emplacement.cs" />
     <Compile Include="Models\Classe\Stock\Poste.cs" />
+    <Compile Include="Models\Classe\Stock\SortieCommande.cs" />
     <Compile Include="Models\Classe\Stock\StatArticles.cs" />
     <Compile Include="Models\Classe\Stock\StatCommande.cs" />
     <Compile Include="Models\Classe\Stock\StatDuree.cs" />
@@ -215,6 +216,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\fonctionCompte.js" />
     <Content Include="Content\fonctionInscription.js" />
     <Content Include="Content\fonctionStatistiques.js" />
     <Content Include="Content\fonctionStock.js" />
@@ -1959,12 +1961,12 @@
     <Content Include="Views\Shared\Accueil_vente.cshtml" />
     <Content Include="Views\Shared\Login.cshtml" />
     <Content Include="Views\Shared\Accueil_stock.cshtml" />
-    <Content Include="Views\Login\Profile.cshtml" />
+    <Content Include="Views\Utilisateur\Profile.cshtml" />
+    <Content Include="Views\Shared\Admin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Mother\" />
-    <Folder Include="Views\Utilisateur\" />
     <Folder Include="Views\Vente\" />
   </ItemGroup>
   <ItemGroup>

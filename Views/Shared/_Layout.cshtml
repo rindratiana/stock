@@ -40,13 +40,13 @@
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="/Vente/Index" class="nav-link">Accueil</a>
-                </li>
                 @if (ViewBag.espaceVente == "ok")
                 {
                     <li class="nav-item d-none d-sm-inline-block">
                         <a href="/Vente/Index" class="nav-link">Espace vente</a>
+                    </li>
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <a href="/Utilisateur/Profile" class="nav-link">Profil</a>
                     </li>
                 }
                 @if (ViewBag.espaceStock == "ok")
@@ -57,11 +57,14 @@
                     <li class="nav-item d-none d-sm-inline-block">
                         <a href="/Stock/Statistiques" class="nav-link">Statistiques</a>
                     </li>
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <a href="/Utilisateur/Profile" class="nav-link">Profil</a>
+                    </li>
                 }
             </ul>
 
             <!-- SEARCH FORM -->
-            <form class="form-inline ml-3">
+            <!--<form class="form-inline ml-3">
                 <div class="input-group input-group-sm">
                     <input class="form-control form-control-navbar" type="search" placeholder="Recherche" aria-label="Search">
                     <div class="input-group-append">
@@ -70,68 +73,9 @@
                         </button>
                     </div>
                 </div>
-            </form>
-
+            </form>-->
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
-                <!-- Messages Dropdown Menu -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-comments"></i>
-                        <span class="badge badge-danger navbar-badge">3</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="/Content/template/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        Eric
-                                        <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">Tsy misy paracétamol intsony ao am stock...</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="/Content/template/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        Mendrika
-                                        <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">Fa ahoana no taraiky be ny ao ambany ao eh</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 3 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="/Content/template/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        Sendra
-                                        <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">Mba afaka miakatra kely ve ianao?</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">Voir tous les messages</a>
-                    </div>
-                </li>
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
@@ -176,7 +120,7 @@
                 <!-- Sidebar user (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="/Content/template/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="/Content/template/dist/img/avatar_user.PNG" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">@ViewBag.userName</a>
@@ -195,19 +139,22 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="/Vente/Index" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Espace vente</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/Stock/Index" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Stock</p>
-                                    </a>
-                                </li>
-                            </ul>
+                                @if (ViewBag.espaceAdmin == "ok")
+                                {
+                                    <li class="nav-item">
+                                        <a href="/Vente/Index" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Espace vente</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Stock/Index" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Stock</p>
+                                        </a>
+                                    </li>
+                                }
+                                </ul>
                         </li>
                         <li class="nav-item has-treeview">
                             <a href="http://10.0.0.1" class="nav-link">
@@ -236,7 +183,7 @@
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="~/Home/Index">Accueil</a></li>
+                                <li class="breadcrumb-item"><a href="#">Application stock</a></li>
                                 <li class="breadcrumb-item active">@ViewBag.titre</li>
                             </ol>
                         </div>

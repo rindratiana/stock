@@ -1,0 +1,157 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Content/fonctionCompte.js"></script>
+<div class="container-fluid">
+    @if (ViewData["utilisateur"] != null)
+    {
+        stock.Models.Classe.Utilisateur utilisateur = ViewData["utilisateur"] as stock.Models.Classe.Utilisateur;
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Profile Image -->
+                <div class="card card-primary card-outline">
+                    <div class="card-body box-profile">
+                        <div class="text-center">
+                            <img class="profile-user-img img-fluid img-circle"
+                                 src="/Content/template/dist/img/avatar_user.PNG"
+                                 alt="User profile picture">
+                        </div>
+
+                        <h3 class="profile-username text-center">@utilisateur.NomUtilisateur @utilisateur.Prenoms</h3>
+
+                        <p class="text-muted text-center">@utilisateur.Poste.NomPoste</p>
+
+                        <ul class="list-group list-group-unbordered mb-3">
+                            
+                        </ul>
+                        <a href="javascript:parametreCompte()" class="btn btn-primary btn-block"><b>Paramètres du compte</b></a>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <div class="col-md-9">
+                <div class="card" id="div_parametre" style="display:none">
+                    <div class="card-header p-2">
+                        <ul class="nav nav-pills">
+                            <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Paramètres du compte</a></li>
+                        </ul>
+                    </div><!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane" id="settings">
+                                <div class="form-group row">
+                                    <label for="inputName" class="col-sm-2 col-form-label">Nom</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="nom" placeholder="Nom" value="@utilisateur.NomUtilisateur">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail" class="col-sm-2 col-form-label">Prénoms</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="prenom" placeholder="Prénoms" value="@utilisateur.Prenoms">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputName2" class="col-sm-2 col-form-label">Identifiant</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="identifiant" placeholder="identifiant" value="@utilisateur.Identifiants" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputName2" class="col-sm-2 col-form-label">Mot de passe</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="ancien_mdp" placeholder="Ancien mot de passe">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputName2" class="col-sm-2 col-form-label">*</label>
+                                    <div class="col-sm-10">
+                                        <input id="mdp1" type="password" class="form-control" placeholder="Mot de passe" name="mdp1">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+
+                                    <label for="inputName2" class="col-sm-2 col-form-label" id="label_mdp2">*</label>
+                                    <div class="col-sm-10">
+                                        <input id="mdp2" type="password" class="form-control" placeholder="Confirmation mot de passe" name="mdp2">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="offset-sm-2 col-sm-10">
+                                        <button type="button" onclick="updateAccount()" class="btn btn-danger">Valider</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.tab-pane -->
+                        </div>
+                        <!-- /.tab-content -->
+                    </div><!-- /.card-body -->
+                </div>
+                <!-- /.nav-tabs-custom -->
+            </div>
+            <!-- /.col -->
+
+        </div>
+    }
+</div>
+
+<!-- The modal succes -->
+<div class="modal fade" id="modal_message2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fas fa-info-circle"></i> Information</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <h5 style="text-align:center"><div id="message2"></div></h5>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <a href="/Login/Deconnecter"><button type="button" class="btn btn-default">Ok</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The modal succes -->
+<div class="modal fade" id="modal_message">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fas fa-info-circle"></i> Information</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <h5 style="text-align:center"><div id="message"></div></h5>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#mdp2').keyup(function () {
+        if ($('#mdp2').val() != $('#mdp1').val()) {
+            $("#label_mdp2").show();
+            $("#label_mdp2").text("Vérifiez bien votre nouveau mot de passe");
+            $("#label_mdp2").css("color", "red");
+            $("#mdp2").addClass("form-control is-invalid");
+        }
+        else {
+            $("#mdp2").removeClass("form-control is-invalid");
+            $("#mdp2").addClass("form-control");
+            $("#label_mdp2").text("*");
+            $("#label_mdp2").css("color", "black");
+        }
+    });
+</script>

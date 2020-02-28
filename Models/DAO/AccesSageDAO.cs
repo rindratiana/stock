@@ -149,7 +149,6 @@ namespace stock.Models.DAO
             string sql = "SELECT F_ARTICLE.AR_Ref,F_ARTICLE.AR_Design,F_ARTICLE.FA_CodeFamille," +
                 "F_ARTICLE.CL_No2, F_DOCLIGNE.DL_Qte,F_DOCLIGNE.DO_Piece FROM F_DOCLIGNE " +
                 "join F_ARTICLE on F_ARTICLE.AR_Ref=F_DOCLIGNE.AR_Ref  " +
-                "join F_CATALOGUE on F_ARTICLE.CL_No2=F_CATALOGUE.CL_No " +
                 "WHERE F_DOCLIGNE.DO_Piece='"+ numero +"' and F_DOCLIGNE.DO_Type='30'";
             command = new SqlCommand(sql, connexion.Connection);
             dataReader = command.ExecuteReader();

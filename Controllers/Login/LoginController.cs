@@ -44,9 +44,20 @@ namespace stock.Controllers.Login
                 poste.IdPoste = idposte;
                 utilisateur.Identifiants = identifiant;
                 utilisateur.Mdp = mdp1;
-                utilisateur.CreateUtilisateur();
-                ViewBag.message = "Inscription fait avec succès";
-                return View("Login");
+                utilisateur.Etat = "0";
+                Poste postetemp = new Poste();
+                if (mdp1.Length <= 4)
+                {
+                    ViewBag.erreur = "Le mot de passe ne doît pas être inférieur à 4 caractères";
+                    ViewData["listePoste"] = postetemp.GetPostes();
+                    return View("Inscription");
+                }
+                else
+                {
+                    utilisateur.CreateUtilisateur();
+                    ViewBag.message = "Inscription fait avec succès, attente validation de l'administrateur";
+                    return View("Login");
+                }
             }
             catch (Exception ex)
             {
@@ -93,6 +104,7 @@ namespace stock.Controllers.Login
                         ViewBag.espaceVente = "ok";
                         ViewBag.userName = utilisateur.Prenoms;
                         return View("Accueil_vente");
+                    
                     case "2":
                         ViewBag.date = DateTime.Now.ToString("yyyy-MM-dd");
                         List<Commande> commandeEncours = commande.GetListeToutCommandeEnCours();
@@ -110,6 +122,14 @@ namespace stock.Controllers.Login
                         ViewBag.espaceStock = "ok";
                         ViewBag.userName = utilisateur.Prenoms;
                         return View("Accueil_stock");
+                    
+                    case "4":
+                        ViewData["utilisateursValide"] = utilisateur.GetUtilisateurValidation("1");
+                        ViewData["utilisateursNonValide"] = utilisateur.GetUtilisateurValidation("0");
+                        ViewBag.titre = "Gestion des utilisateurs";
+                        ViewBag.userName = utilisateur.Prenoms;
+                        return View("Admin");
+
                     default:
                         return View("login");
                 }

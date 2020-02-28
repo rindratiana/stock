@@ -16,6 +16,8 @@ namespace stock.Models.Classe.Stock
         private int client;
         private string etat;
         private List<DetailCommande> listeDetailCommande;
+        private Duree duree;
+        private SortieCommande sortieCommande;
 
         public Commande() { }
         public Commande(int idCommande, string dateCommande, string numero, Comptoir comptoir, int client, string etat)
@@ -34,7 +36,34 @@ namespace stock.Models.Classe.Stock
         public Comptoir Comptoir { get => comptoir; set => comptoir = value; }
         public int Client { get => client; set => client = value; }
         public string Etat { get => etat; set => etat = value; }
+
+        public List<Commande> GetListeCommande(string dateDebut, string dateFin)
+        {
+            CommandeDAO commandeDAO = new CommandeDAO();
+            try
+            {
+                return commandeDAO.GetListeCommande(dateDebut,dateFin);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        public List<Commande> GetListeCommandeAnnule(string dateDebut, string dateFin)
+        {
+            CommandeDAO commandeDAO = new CommandeDAO();
+            try
+            {
+                return commandeDAO.GetListeCommandeAnnule(dateDebut, dateFin);
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+        }
         public List<DetailCommande> ListeDetailCommande { get => listeDetailCommande; set => listeDetailCommande = value; }
+        public Duree Duree { get => duree; set => duree = value; }
+        public SortieCommande SortieCommande { get => sortieCommande; set => sortieCommande = value; }
 
         public List<DetailCommande> GetArticlesCommandesStock(string numerocomplete)
         {

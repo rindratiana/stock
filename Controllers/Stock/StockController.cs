@@ -14,6 +14,34 @@ namespace stock.Controllers.Stock
     public class StockController : Controller
     {
         [HttpPost]
+        public JsonResult GetListeCommande(string dateDebut, string dateFin)
+        {
+            try
+            {
+                Commande commande = new Commande();
+                List<Commande> liste = commande.GetListeCommande(dateDebut, dateFin);
+                return Json(liste);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
+        public JsonResult GetListeCommandeAnnule(string dateDebut, string dateFin)
+        {
+            try
+            {
+                Commande commande = new Commande();
+                List<Commande> liste = commande.GetListeCommandeAnnule(dateDebut, dateFin);
+                return Json(liste);
+            }
+            catch (Exception exception)
+            {
+                return Json(exception.Message);
+            }
+        }
+        [HttpPost]
         public JsonResult GetStatCommandesMouvement(string dateDebut, string dateFin)
         {
             try
@@ -48,9 +76,9 @@ namespace stock.Controllers.Stock
             {
                 StatDuree statDuree = new StatDuree();
                 double reponse = statDuree.GetStatDuree(dateDebut, dateFin);
-                var minutes = (int)(reponse);
-                var remainingSeconds = (int)((reponse - minutes) * 60);
-                return Json("00:"+ string.Format("{0:00}", minutes) + ':' + remainingSeconds.ToString("00"));
+                //conversion en milliseconde
+                reponse = reponse * 1000;
+                return Json(reponse);
             }
             catch (Exception exception)
             {
