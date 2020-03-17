@@ -12,6 +12,40 @@ namespace stock.Models.DAO
     {
         public AccesSageDAO() { }
 
+        public Comptoir GetComptoirById(string idComptoir)
+        {
+            ConnexionSage connexion = new ConnexionSage();
+            SqlCommand command;
+            SqlDataReader dataReader;
+            Comptoir comptoirTemp = new Comptoir();
+            connexion.Open();
+            string sql = "SELECT * FROM F_CAISSE where CO_No='" + idComptoir + "'";
+            command = new SqlCommand(sql, connexion.Connection);
+            dataReader = command.ExecuteReader();
+            try
+            {
+                if (dataReader.Read().ToString() == "True")
+                {
+                    comptoirTemp.IdComptoir = dataReader["CO_No"].ToString();
+                    comptoirTemp.NomComptoir = dataReader["CA_Intitule"].ToString();
+                }
+                else
+                {
+                    comptoirTemp.IdComptoir = "";
+                    comptoirTemp.NomComptoir = "";
+                }
+
+                return comptoirTemp;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                connexion.CloseRest(dataReader, command, connexion.Connection);
+            }
+        }
         public Comptoir GetComptoirByNomCaisse(string nom)
         {
             ConnexionSage connexion = new ConnexionSage();
@@ -52,7 +86,7 @@ namespace stock.Models.DAO
             SqlDataReader dataReader;
             Comptoir comptoirTemp = new Comptoir();
             connexion.Open();
-            string sql = "SELECT DISTINCT F_DOCLIGNE.CO_No, F_CAISSE.CA_Intitule FROM F_DOCLIGNE join F_CAISSE on F_CAISSE.CO_No = F_DOCLIGNE.CO_No WHERE F_DOCLIGNE.DO_Piece='" + numero_ticket + "'";
+            string sql = "SELECT DISTINCT F_DOCLIGNE.CO_No, F_CAISSE.CA_Intitule FROM F_DOCLIGNE join F_CAISSE on F_CAISSE.CO_No = F_DOCLIGNE.CO_No join F_ARTICLE on F_ARTICLE.AR_Ref = F_DOCLIGNE.AR_Ref WHERE F_DOCLIGNE.DO_Piece='" + numero_ticket + "'";
             command = new SqlCommand(sql, connexion.Connection);
             dataReader = command.ExecuteReader();
             try
@@ -119,7 +153,7 @@ namespace stock.Models.DAO
             SqlCommand command;
             SqlDataReader dataReader;
             connexion.Open();
-            string sql = "SELECT DISTINCT F_DOCLIGNE.DO_Piece FROM F_DOCLIGNE WHERE F_DOCLIGNE.DO_Piece like '"+piece+ "%' and F_DOCLIGNE.DO_Type=30 and F_DOCLIGNE.CO_No='" + comptoir.IdComptoir+"'";
+            string sql = "SELECT DISTINCT F_DOCLIGNE.DO_Piece FROM F_DOCLIGNE WHERE F_DOCLIGNE.DO_Piece like '"+piece+ "%' and F_DOCLIGNE.CO_No='" + comptoir.IdComptoir+"'";
             command = new SqlCommand(sql, connexion.Connection);
             dataReader = command.ExecuteReader();
             try
@@ -149,7 +183,7 @@ namespace stock.Models.DAO
             string sql = "SELECT F_ARTICLE.AR_Ref,F_ARTICLE.AR_Design,F_ARTICLE.FA_CodeFamille," +
                 "F_ARTICLE.CL_No2, F_DOCLIGNE.DL_Qte,F_DOCLIGNE.DO_Piece FROM F_DOCLIGNE " +
                 "join F_ARTICLE on F_ARTICLE.AR_Ref=F_DOCLIGNE.AR_Ref  " +
-                "WHERE F_DOCLIGNE.DO_Piece='"+ numero +"' and F_DOCLIGNE.DO_Type='30'";
+                "WHERE F_DOCLIGNE.DO_Piece='"+ numero +"'";
             command = new SqlCommand(sql, connexion.Connection);
             dataReader = command.ExecuteReader();
             try

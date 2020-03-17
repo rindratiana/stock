@@ -17,11 +17,11 @@ namespace stock.Models.DAO
             string query = "";
             if (dateDebut == "" && dateFin == "")
             {
-                query = "select * from commande join duree on duree.id_commande =commande.id_commande join sortie on sortie.id_commande=commande.id_commande where commande.ETAT = '111' and commande.CLIENT='1'";
+                query = "select * from commande join duree on duree.id_commande =commande.id_commande join sortie on sortie.id_commande=commande.id_commande where commande.ETAT = '111' and commande.CLIENT='1' group by sortie.id_commande";
             }
             else
             {
-                query = "select * from commande join duree on duree.id_commande =commande.id_commande join sortie on sortie.id_commande=commande.id_commande where commande.ETAT = '111' and commande.CLIENT='1' and commande.date_commande<='" + dateFin + "' and commande.date_commande>='" + dateDebut + "'";
+                query = "select * from commande join duree on duree.id_commande =commande.id_commande join sortie on sortie.id_commande=commande.id_commande where commande.ETAT = '111' and commande.CLIENT='1' and commande.date_commande<='" + dateFin + "' and commande.date_commande>='" + dateDebut + "' group by sortie.id_commande";
             }
             MySqlCommand command = new MySqlCommand(query, connexion.GetConnection());
             AccesSageDAO accesSageDAO = new AccesSageDAO();
@@ -40,7 +40,7 @@ namespace stock.Models.DAO
                     //Lecture des donnees et stockage dans la liste
                     while (dataReader.Read())
                     {
-                        Comptoir comptoir = accesSageDAO.GetComptoirByNumTicket(dataReader["NUMERO"].ToString());
+                        Comptoir comptoir = accesSageDAO.GetComptoirById(dataReader["ID_COMPTOIR"].ToString());
                         Commande commande = new Commande(Int32.Parse(dataReader["id_commande"].ToString()), dataReader["DATE_COMMANDE"].ToString(), dataReader["NUMERO"].ToString(), comptoir, Int32.Parse(dataReader["CLIENT"].ToString()), dataReader["ETAT"].ToString());
                         List<DetailCommande> detailCommandes = GetArticlesCommandes(commande.Numero);
                         for (int i = 0; i < detailCommandes.Count; i++)
@@ -103,7 +103,7 @@ namespace stock.Models.DAO
                     //Lecture des donnees et stockage dans la liste
                     while (dataReader.Read())
                     {
-                        Comptoir comptoir = accesSageDAO.GetComptoirByNumTicket(dataReader["NUMERO"].ToString());
+                        Comptoir comptoir = accesSageDAO.GetComptoirById(dataReader["ID_COMPTOIR"].ToString());
                         Commande commande = new Commande(Int32.Parse(dataReader["id_commande"].ToString()), dataReader["DATE_COMMANDE"].ToString(), dataReader["NUMERO"].ToString(), comptoir, Int32.Parse(dataReader["CLIENT"].ToString()), dataReader["ETAT"].ToString());
                         List<DetailCommande> detailCommandes = GetArticlesCommandes(commande.Numero);
                         for(int i = 0; i < detailCommandes.Count; i++)
@@ -326,12 +326,11 @@ namespace stock.Models.DAO
                 throw exception;
             }
         }
-        public void SortieStock(MySqlCommand command,string id_magasinier,string id_binome,string numero_ticket)
+        public void SortieStock(MySqlCommand command,string id_magasinier,string id_binome,Commande commande)
         {
-            string idcommande = this.GetIdCommande(numero_ticket);
             try
             {
-                string query = "INSERT INTO SORTIE (ID_COMMANDE,ID_BINOME,ID_MAGASINIER) values('"+idcommande+"','"+id_binome+"','"+id_magasinier+"')";
+                string query = "INSERT INTO SORTIE (ID_COMMANDE,ID_BINOME,ID_MAGASINIER) values('"+commande.IdCommande+"','"+id_binome+"','"+id_magasinier+"')";
                 //create command and assign the query and connection from the constructor
                 command.CommandText = query;
                 //Execute command
@@ -342,7 +341,7 @@ namespace stock.Models.DAO
                 throw exception;
             }
         }
-        public void Sortie(string numero_ticket,string id_magasinier,string id_binome)
+        public void Sortie(string id_commande,string id_magasinier,string id_binome)
         {
             Connexion connexion = new Connexion();
             MySqlConnection connection = connexion.GetConnection();
@@ -354,16 +353,15 @@ namespace stock.Models.DAO
             command.Transaction = transaction;
             
             Duree duree = new Duree();
-            string idcommande = this.GetIdCommande(numero_ticket);
             Commande commande = new Commande();
-            commande.IdCommande = Int32.Parse(idcommande);
+            commande.IdCommande = Int32.Parse(id_commande);
             duree.Commande = commande;
             duree.HeureSortie = DateTime.Now;
             DureeDAO dureeDAO = new DureeDAO();
             try
             {
-                this.SortieCommande(command, numero_ticket);
-                this.SortieStock(command, id_magasinier, id_binome,numero_ticket);
+                this.SortieCommande(command, commande);
+                this.SortieStock(command, id_magasinier, id_binome, commande);
                 dureeDAO.UpdateDuree(command, duree, "SORTIE");
                 if (transaction != null)
                 {
@@ -381,11 +379,11 @@ namespace stock.Models.DAO
                 connexion.CloseAll(command, transaction, connection);
             }
         }
-        public void SortieCommande(MySqlCommand command, string numero_ticket)
+        public void SortieCommande(MySqlCommand command, Commande commande)
         {
             try
             {
-                string query = "UPDATE COMMANDE SET ETAT = '110' where numero = '" + numero_ticket + "'";
+                string query = "UPDATE COMMANDE SET ETAT = '110' where ID_COMMANDE = '" + commande.IdCommande + "'";
                 //create command and assign the query and connection from the constructor
                 command.CommandText = query;
                 //Execute command

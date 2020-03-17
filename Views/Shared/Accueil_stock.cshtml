@@ -14,9 +14,9 @@
 
         foreach (stock.Models.Classe.Stock.Commande commande in ViewData["commandeEnCours"] as List<stock.Models.Classe.Stock.Commande>)
         {
-            String id = "corps" + commande.Numero;
-            String idbinome = "binome" + commande.Numero;
-            String idmagasinier = "magasinier" + commande.Numero;
+            String id = "corps" + commande.IdCommande+"";
+            String idbinome = "binome" + commande.IdCommande+"";
+            String idmagasinier = "magasinier" + commande.IdCommande+"";
             <div id="@id" class="row">
                 <div class="col-sm-12">
                     <div class="card card-primary">
@@ -24,7 +24,7 @@
                             <h3 class="card-title">Ticket n* @commande.Numero</h3>
                         </div>
                         <div class="card-body">
-                            <div id="@commande.Numero" class="row">
+                            <div id="@commande.IdCommande" class="row">
                                 <div class="col-sm-8">
                                     <div class="form-group">
                                         <label for="designation">Désignation</label>
@@ -61,7 +61,7 @@
                                 <div class="col-sm-2">
                                     <div class="form-group">
                                         <label for="comptoir">Binôme</label>
-                                        <input id="@idbinome" type="text" class="form-control" onkeypress="autocomplete2(@commande.Numero)" placeholder="Binôme" name="binome">
+                                        <input id="@idbinome" type="text" class="form-control" onkeypress="autocomplete2(@commande.IdCommande)" placeholder="Binôme" name="binome">
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" onclick="sortie(@commande.Numero)" class="btn btn-primary">Sortie</button>
+                            <button type="submit" onclick="sortie(@commande.IdCommande)" class="btn btn-primary">Sortie</button>
                         </div>
                     </div>
                 </div>

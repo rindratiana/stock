@@ -13,7 +13,7 @@ namespace stock.Models.Classe.Stock
         public ConnexionSage()
         {
             try { 
-                Connection = new SqlConnection("Server = 10.0.0.4; Database = METROPOLE_2019; User ID = IT_Manager; Password = @2019Dmin***:p; Trusted_Connection = False;");
+                Connection = new SqlConnection("Server = 10.0.0.4; Database = METROPOLE_2019; User ID = IT_Manager; Password = Bandy@Milay2020^_^; Trusted_Connection = False;");
             }
             catch(Exception exception)
             {

@@ -23,9 +23,9 @@
         })
     });
 
+    
     $(function () {
         var chat = $.connection.hubClient;
-
         $.connection.hub.start().done(function () {
             $('#button_submit').click(function () {
                 var notificationActuel = $("#notif").text();
@@ -37,6 +37,7 @@
 
 
     function voirArticles(num_ticket) {
+        console.log(num_ticket);
         //Affichage liste
         $(document).ready(function () {
             $.ajax({
@@ -188,6 +189,12 @@
                                     })
                                         .done(function (response) {
                                             let data = response;
+                                            if (data.length == 0) {
+                                                $("#message").text("Il n'y pas d'article pour ce ticket");
+                                                $("#message").css("color", "red");
+                                                $("#modal_message").modal("show");
+                                            }
+                                            else {
                                             //Element à cacher
                                             $("#corps").append("<input type=\"hidden\" name=\"taille\" value=\"" + data.length + "\">");
                                             $("#corps").append("<input type=\"hidden\" id=\"numero_ticket\" name=\"numero_ticket\" value=\"" + num_ticket + "\">");
@@ -212,6 +219,7 @@
                                             $("#colonne_choix").show();
                                             $("#numero2").text("Liste des articles pour le ticket N* " + num_ticket);
                                             $("#myModal").modal("show");
+                                            }
                                         })
                                         .fail(function (error) {
                                             alert("Vérifiez bien le numéro du ticket");
@@ -306,7 +314,7 @@
                                         <tr id="@commande.IdCommande">
                                             <td>#</td>
                                             <td style="text-align:right">@commande.Numero</td>
-                                            <td style="text-align:center"><button type="button" onclick="voirArticles(@commande.Numero)"><i class="fas fa-info-circle"></i></button></td>
+                                            <td style="text-align:center"><button type="button" onclick="voirArticles('@commande.Numero')"><i class="fas fa-info-circle"></i></button></td>
                                             <td style="text-align:center"><button type="button" onclick="valider(@commande.IdCommande)"><i class="fas fa-check"></i></button></td>
                                             <td style="text-align:center"><button type="button" onclick="annuler(@commande.IdCommande)"><i class="fas fa-times"></i></button></td>
                                         </tr>

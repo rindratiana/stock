@@ -80,6 +80,7 @@ namespace stock.Models.Classe.Stock
                     if (temp != null)
                     {
                         listeArticleSage[i].Comptoir = accesSageDAO.GetComptoirByNumTicket(listeArticleSage[i].Numero);
+                        listeArticleSage[i].Quantite = temp.Quantite;
                         reponse.Add(listeArticleSage[i]);
                     }
                 }
@@ -114,12 +115,12 @@ namespace stock.Models.Classe.Stock
                 throw exception;
             }
         }
-        public void Sortie(string numero_ticket,string id_magasinier,string id_binome)
+        public void Sortie(string id_commande,string id_magasinier,string id_binome)
         {
             try
             {
                 CommandeDAO commandeDAO = new CommandeDAO();
-                commandeDAO.Sortie(numero_ticket, id_magasinier, id_binome);
+                commandeDAO.Sortie(id_commande, id_magasinier, id_binome);
             }
             catch (Exception exception)
             {
@@ -195,6 +196,10 @@ namespace stock.Models.Classe.Stock
 
                 DateTime dateNow = DateTime.Now;
                 string date = dateNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+                if (detailCommandes.Count == 0)
+                {
+                    throw new Exception("Veuillez choisir un article svp");
+                }
                 if (existeCommande(numero_ticket)!=true)
                 {
                     Commande commande = new Commande();

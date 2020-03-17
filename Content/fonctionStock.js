@@ -18,7 +18,8 @@
 });
 
 function autocomplete2(idbinome) {
-    var id = "#binome" + idbinome;
+    console.log(idbinome);
+    var id = "#binome" + idbinome+"";
     $(id).autocomplete({
         maxShowItems: 5,
         source: function (request, response) {
@@ -145,6 +146,7 @@ function sortie(numero_ticket) {
 }
 
 function getListeArticle(numero_ticket) {
+    console.log(numero_ticket);
     $(document).ready(function () {
         $.ajax({
             url: '/Vente/GetListeCommandeStock/',
@@ -191,7 +193,7 @@ $(function () {
         $('#notif2').text(indexActuel.toString() + " notification(s)");
         playSound("/Content/Uploads/notif.mp3");
         var listeNotif = $("#notification");
-        listeNotif.append("<div id=\"notif" + numero_ticket + "\"><a href=\"javascript:getListeArticle(" + numero_ticket + ")\" class=\"dropdown-item\"><i class=\"fas fa-envelope mr-2\"></i>" + numero_ticket + "</a><div class=\"dropdown-divider\"></div></div>");
+        listeNotif.append("<div id=\"notif" + numero_ticket + "\"><a href=\"/Stock/Index\" class=\"dropdown-item\"><i class=\"fas fa-envelope mr-2\"></i>" + numero_ticket + "</a><div class=\"dropdown-divider\"></div></div>");
         
     }
     $.connection.hub.start();

@@ -122,7 +122,7 @@ function getListeCommandeAnnule() {
             type: "POST",
             contentType: "application/json; charset=utf-8",
             beforeSend:function() {
-                $('body').append("<img id=\"loader\" style='margin:auto' src=\"/Content/template/dist/img/load/giphy.GIF\"/>");
+                $('body').append("<img id=\"loader\" style='top: 45%; position: absolute; height: 100px; width: 100px;background: black;left: 45%;' src=\"/Content/template/dist/img/load/giphy.GIF\"/>");
             }
         })
             .done(function (response) {

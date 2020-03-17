@@ -189,8 +189,23 @@ namespace stock.Controllers.Vente
             }
             catch(Exception exception)
             {
-                ViewBag.erreur = exception.Message;
-                return View("Accueil_vente");
+                Utilisateur utilisateur = HttpContext.Session["utilisateur"] as Utilisateur;
+                if (utilisateur.Poste.IdPoste == "1")
+                {
+                    Commande commande = new Commande();
+                    AccesSageDAO accesSageDAO = new AccesSageDAO();
+                    Comptoir comptoir = accesSageDAO.GetComptoirByNomCaisse(utilisateur.Identifiants);
+                    List<Commande> listeCommandeEnCours = commande.GetListeCommandeEnCours(comptoir);
+                    ViewBag.espaceVente = "ok";
+                    ViewData["listeCommandeEnCours"] = listeCommandeEnCours;
+                    ViewBag.erreur = exception.Message;
+                    return View("Accueil_vente");
+                }
+                else
+                {
+                    ViewBag.erreur = "Veuillez vous connecter en tant qu'utilisateur Auxiliaire de vente";
+                    return View("Login");
+                }
             }
         }
     }
